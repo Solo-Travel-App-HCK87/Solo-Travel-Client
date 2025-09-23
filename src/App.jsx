@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import PackageDetailPage from './pages/PackageDetailPage';
 import MyPackagesPage from './pages/MyPackagesPage';
+import ChatRoomPage from './pages/ChatRoomPage';
 import { ScrollRestoration } from 'react-router';
 import { useEffect } from 'react';
 
@@ -39,6 +40,7 @@ function App() {
           </Route>
           <Route path="/packages/:id" element={<PackageDetailPage />} />
           <Route path="/my-packages" element={<MyPackagesPage />} />
+          <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
