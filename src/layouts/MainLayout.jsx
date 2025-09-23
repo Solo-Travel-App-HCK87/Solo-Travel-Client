@@ -5,6 +5,7 @@ export function MainLayout() {
   return (
     <>
       <Navbar />
+
       <Outlet />
     </>
   );

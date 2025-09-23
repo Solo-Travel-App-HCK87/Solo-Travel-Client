@@ -1,10 +1,11 @@
 import { Users, User, Package, LogOut, ChevronDown } from 'lucide-react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -102,7 +103,13 @@ export default function Navbar() {
                       <span className="font-medium">Profile Details</span>
                     </button>
 
-                    <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
+                    <button
+                      onClick={() => {
+                        navigate('/my-packages');
+                        setIsProfileOpen(false);
+                      }}
+                      className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
+                    >
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
                         <div className="font-medium">My Packages</div>
