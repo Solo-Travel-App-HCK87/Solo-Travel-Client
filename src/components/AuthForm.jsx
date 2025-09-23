@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useState } from 'react';
+import { Link } from 'react-router';
 
 export default function AuthForm(props) {
   const { handleSubmit, type, btmMsg1, btmLink, btmMsg2 } = props;
   const [form, setForm] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,9 +19,7 @@ export default function AuthForm(props) {
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
           <div className="max-w-[480px] w-full">
             <div className="p-6 sm:p-8 rounded-2xl bg-white border border-gray-200 shadow-sm">
-              <h1 className="text-slate-900 text-center text-3xl font-semibold">
-                {type}
-              </h1>
+              <h1 className="text-slate-900 text-center text-3xl font-semibold">{type}</h1>
               <form
                 className="mt-12 space-y-6"
                 onSubmit={(e) => {
@@ -30,9 +28,7 @@ export default function AuthForm(props) {
                 }}
               >
                 <div>
-                  <label className="text-slate-900 text-sm font-medium mb-2 block">
-                    Email
-                  </label>
+                  <label className="text-slate-900 text-sm font-medium mb-2 block">Email</label>
                   <div className="relative flex items-center">
                     <input
                       name="email"
@@ -59,9 +55,7 @@ export default function AuthForm(props) {
                   </div>
                 </div>
                 <div>
-                  <label className="text-slate-900 text-sm font-medium mb-2 block">
-                    Password
-                  </label>
+                  <label className="text-slate-900 text-sm font-medium mb-2 block">Password</label>
                   <div className="relative flex items-center">
                     <input
                       name="password"
@@ -87,7 +81,7 @@ export default function AuthForm(props) {
                   </div>
                 </div>
 
-                {type === "Register" && (
+                {type === 'Register' && (
                   <>
                     <div>
                       <label className="text-slate-900 text-sm font-medium mb-2 block">
