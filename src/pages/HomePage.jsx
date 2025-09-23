@@ -1,6 +1,8 @@
 import { MapPin, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <div className="h-screen overflow-hidden relative">
       <div
@@ -55,7 +57,9 @@ export default function HomePage() {
               </div>
 
               <button
-                onClick={() => setCurrentPage('package')}
+                onClick={() => {
+                  navigate('/packages');
+                }}
                 className="bg-blue-500 text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-blue-600 transition-colors"
               >
                 Search
