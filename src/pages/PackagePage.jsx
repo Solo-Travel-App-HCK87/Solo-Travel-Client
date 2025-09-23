@@ -1,93 +1,17 @@
 import { MapPin } from 'lucide-react';
 import PackageCard from '../components/PackageCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchPackages } from '../store/packageSlice';
 
 export default function PackagePage() {
-  const packages = [
-    {
-      id: 1,
-      destination: 'Bali, Indonesia',
-      image: 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop',
-      duration: '7 Days',
-      price: '$899',
-      originalPrice: '$1,299',
-      includes: [
-        'Flight',
-        'Accommodation',
-        'Daily breakfast',
-        'Random travel buddy',
-        'Local guide',
-      ],
-      availableSlots: 12,
-      nextDeparture: 'Dec 15, 2025',
-      tags: ['Beach', 'Culture', 'Adventure'],
-    },
-    {
-      id: 2,
-      destination: 'Tokyo, Japan',
-      image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop',
-      duration: '8 Days',
-      price: '$1,299',
-      originalPrice: '$1,899',
-      includes: ['Flight', 'Hotel', 'JR Pass', 'Random travel buddy', 'City tours'],
-      availableSlots: 8,
-      nextDeparture: 'Jan 10, 2026',
-      tags: ['Culture', 'Food', 'Technology'],
-    },
-    {
-      id: 3,
-      destination: 'Paris, France',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '6 Days',
-      price: '$1,099',
-      originalPrice: '$1,599',
-      includes: ['Flight', 'Hotel', 'Museum passes', 'Random travel buddy', 'Seine cruise'],
-      availableSlots: 15,
-      nextDeparture: 'Dec 20, 2025',
-      tags: ['Romance', 'Art', 'History'],
-    },
-    {
-      id: 4,
-      destination: 'Iceland',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '9 Days',
-      price: '$1,599',
-      originalPrice: '$2,299',
-      includes: [
-        'Flight',
-        'Accommodation',
-        'Car rental',
-        'Random travel buddy',
-        'Northern lights tour',
-      ],
-      availableSlots: 6,
-      nextDeparture: 'Feb 1, 2026',
-      tags: ['Nature', 'Adventure', 'Photography'],
-    },
-    {
-      id: 5,
-      destination: 'Thailand',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '10 Days',
-      price: '$699',
-      originalPrice: '$999',
-      includes: ['Flight', 'Hotels', 'Island hopping', 'Random travel buddy', 'Cooking class'],
-      availableSlots: 20,
-      nextDeparture: 'Dec 18, 2025',
-      tags: ['Beach', 'Food', 'Budget'],
-    },
-    {
-      id: 6,
-      destination: 'Morocco',
-      image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=400&h=300&fit=crop',
-      duration: '8 Days',
-      price: '$999',
-      originalPrice: '$1,399',
-      includes: ['Flight', 'Riads', 'Desert safari', 'Random travel buddy', 'Marrakech tour'],
-      availableSlots: 4,
-      nextDeparture: 'Mar 5, 2026',
-      tags: ['Culture', 'Adventure', 'Markets'],
-    },
-  ];
+  const { packages } = useSelector((state) => state.package);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPackages());
+  }, []);
 
   return (
     <div className="min-h-screen">
