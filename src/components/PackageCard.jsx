@@ -11,7 +11,7 @@ export default function PackageCard({ package: pkg }) {
       }}
     >
       <img
-        src={pkg.image}
+        src={pkg.image_url}
         alt={pkg.destination}
         className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
       />
@@ -20,15 +20,20 @@ export default function PackageCard({ package: pkg }) {
         <div className="p-4">
           <div className="flex items-center justify-between">
             <div className="text-white">
-              <h3 className="text-xl font-bold mb-2">{pkg.destination.split(',')[0]}</h3>
+              <h3 className="text-xl font-bold mb-2">{pkg.location}</h3>
               <div className="flex items-center space-x-2 text-sm">
                 <MapPin className="w-4 h-4 opacity-90" />
-                <span className="opacity-90">{pkg.destination}</span>
+                <span className="opacity-90">{pkg.destination_name}</span>
               </div>
             </div>
 
             <div className="text-white text-right">
-              <div className="text-2xl font-bold">{pkg.price}</div>
+              {/* convert to currency format without 00*/}
+              <div className="text-2xl font-bold">
+                {pkg.current_price
+                  .toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                  .replace(/\.00$/, '')}
+              </div>
               <div className="text-sm opacity-90">/Person</div>
             </div>
           </div>
@@ -36,7 +41,7 @@ export default function PackageCard({ package: pkg }) {
       </div>
 
       <div className="absolute top-4 left-4 bg-black/20 backdrop-blur-sm rounded-lg px-3 py-1.5">
-        <span className="text-sm font-medium text-white">{pkg.duration}</span>
+        <span className="text-sm font-medium text-white">{pkg.duration_days} Days</span>
       </div>
     </div>
   );
