@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Navbar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -73,7 +73,9 @@ export default function Navbar() {
               >
                 <Users className="w-4 h-4" />
                 <span>Profile</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`}
+                />
               </button>
 
               {/* Dropdown Menu */}
@@ -103,7 +105,13 @@ export default function Navbar() {
                       <span className="font-medium">Profile Details</span>
                     </button>
 
-                    <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
+                    <button
+                      onClick={() => {
+                        navigate('/my-packages');
+                        setIsProfileOpen(false);
+                      }}
+                      className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
+                    >
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
                         <div className="font-medium">My Packages</div>
@@ -112,10 +120,13 @@ export default function Navbar() {
                     </button>
 
                     <div className="border-t border-gray-200/50 mt-2 pt-2">
-                      <button onClick={() => {
-                        localStorage.removeItem(`access_token`)
-                        navigate(`/login`)
-                      }} className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors">
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem(`access_token`);
+                          navigate(`/login`);
+                        }}
+                        className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors"
+                      >
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Logout</span>
                       </button>
