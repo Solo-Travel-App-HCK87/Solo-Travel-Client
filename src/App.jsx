@@ -1,9 +1,12 @@
-import { BrowserRouter, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>{/* Define your routes here */}</Routes>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
     </BrowserRouter>
   );
 }
