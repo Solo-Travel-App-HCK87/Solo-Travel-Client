@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 import AuthForm from "../components/AuthForm"
-import { showError } from "../helpers/alert"
+import { showError, successLogin } from "../helpers/alert"
 import { http } from "../helpers/http"
 
 
@@ -14,7 +14,8 @@ export default function LoginPage() {
         data
       })
 
-      localStorage.setItem(`access_token`, response.data)
+      localStorage.setItem(`access_token`, response.data.access_token)
+      successLogin()
       navigate("/")
     } catch (error) {
       showError(error)
