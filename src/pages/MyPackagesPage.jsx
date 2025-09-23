@@ -88,17 +88,29 @@ export default function MyPackagesPage() {
             {/* Hero Section */}
             <div className="relative h-[40vh] m-4">
               <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
-                <div className="absolute inset-0 bg-black/20"></div>
+                {/* Background Image */}
+                <img
+                  src="/src/assets/myadvanture-bg.jpg"
+                  alt="My Adventure Background"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40"></div>
 
                 {/* Hero Content */}
                 <div className="absolute inset-0 flex items-center justify-center text-center text-white">
                   <div>
                     <h1
-                      className="text-5xl font-light tracking-tight mb-4"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+                      className="text-6xl font-bold tracking-tight mb-4 text-white drop-shadow-2xl"
+                      style={{
+                        fontFamily: 'Inter, system-ui, sans-serif',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)'
+                      }}
                     >
                       My Adventures
                     </h1>
+                    <p className="text-xl font-medium tracking-wide mb-4 text-white drop-shadow-lg">
+                      Hi Gerry, Ready for your next adventure?
+                    </p>
                     <div className="flex items-center justify-center space-x-2 opacity-90">
                       <MapPin className="w-5 h-5" strokeWidth={1.5} />
                       <span className="text-lg font-light tracking-wide">Your Travel Journey</span>
@@ -187,6 +199,12 @@ export default function MyPackagesPage() {
                               className="px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
                             >
                               View Details
+                            </button>
+                            <button
+                              onClick={() => navigate(`/chat/room/${booking.id}`)}
+                              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                            >
+                              Chat Room
                             </button>
                           </div>
                         </div>
