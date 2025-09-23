@@ -6,6 +6,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -16,9 +17,9 @@ function App() {
         </Route>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/package" element={<PackagePage />} />
+          <Route path="/packages" element={<PackagePage />} />
         </Route>
-        <Route path="/package/:id" element={<h1>Package Details</h1>} />
+        <Route path="/packages/:id" element={<h1>Package Details</h1>} />
       </Routes>
     </BrowserRouter>
   );
