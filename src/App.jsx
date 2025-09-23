@@ -5,11 +5,7 @@ import PackagePage from "./pages/PackagePage";
 import AuthLayout from "./layouts/AuthLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-
-
-
-
-
+import PackageDetailPage from './pages/PackageDetailPage';
 
 function App() {
   return (
@@ -23,7 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/packages" element={<PackagePage />} />
         </Route>
-        <Route path="/packages/:id" element={<h1>Package Details</h1>} />
+        <Route path="/packages/:id" element={<PackageDetailPage />} />
       </Routes>
     </BrowserRouter>
   );
