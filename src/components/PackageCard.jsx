@@ -7,7 +7,7 @@ export default function PackageCard({ package: pkg }) {
     <div
       className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group bg-white"
       onClick={() => {
-        navigate(`/package/${pkg.id}`);
+        navigate(`/packages/${pkg.id}`);
       }}
     >
       <img
