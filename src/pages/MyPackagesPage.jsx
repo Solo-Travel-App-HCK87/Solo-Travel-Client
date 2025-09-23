@@ -17,8 +17,8 @@ export default function MyPackagesPage() {
       highlights: [
         'Northern Lights photography workshop',
         'Blue Lagoon luxury spa experience',
-        'Glacier hiking with professional guide'
-      ]
+        'Glacier hiking with professional guide',
+      ],
     },
     {
       id: 2,
@@ -32,20 +32,17 @@ export default function MyPackagesPage() {
       highlights: [
         'UNESCO World Heritage rice terraces',
         'Traditional Balinese temple ceremonies',
-        'Local cooking class experience'
-      ]
-    }
+        'Local cooking class experience',
+      ],
+    },
   ];
-
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="w-full">
         <div className="grid grid-cols-12 min-h-screen">
-
           {/* Left Panel - Navigation */}
           <div className="col-span-4 bg-white border-r border-gray-100 p-12 sticky top-0 h-screen overflow-y-auto">
-
             {/* Back Button */}
             <button
               onClick={() => navigate('/')}
@@ -68,7 +65,9 @@ export default function MyPackagesPage() {
               <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
                 <div className="text-center">
                   <div className="text-3xl font-light text-gray-900 mb-1">{myBookings.length}</div>
-                  <div className="text-sm text-gray-500 font-medium tracking-wide uppercase">Total Bookings</div>
+                  <div className="text-sm text-gray-500 font-medium tracking-wide uppercase">
+                    Total Bookings
+                  </div>
                 </div>
               </div>
             </div>
@@ -86,7 +85,6 @@ export default function MyPackagesPage() {
 
           {/* Right Content Area */}
           <div className="col-span-8 bg-gray-50">
-
             {/* Hero Section */}
             <div className="relative h-[40vh] m-4">
               <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
@@ -112,20 +110,22 @@ export default function MyPackagesPage() {
 
             {/* Content Container */}
             <div className="p-12 space-y-16 bg-gray-50">
-
               {/* Bookings List */}
               <div className="space-y-8">
                 <h2 className="text-2xl font-light text-gray-900 tracking-wide">Your Bookings</h2>
                 <div className="space-y-6">
                   {myBookings.map((booking, index) => (
-                    <div key={index} className="bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+                    <div
+                      key={index}
+                      className="bg-white border border-gray-200 p-2 rounded-2xl shadow-lg overflow-hidden"
+                    >
                       <div className="grid grid-cols-12 gap-0">
                         {/* Image - Left Side */}
                         <div className="col-span-4">
                           <img
                             src={booking.image}
                             alt={booking.destination}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover rounded-2xl"
                           />
                         </div>
 
@@ -159,10 +159,15 @@ export default function MyPackagesPage() {
 
                           {/* Highlights */}
                           <div>
-                            <div className="text-sm text-gray-500 font-medium mb-2">Package Highlights</div>
+                            <div className="text-sm text-gray-500 font-medium mb-2">
+                              Package Highlights
+                            </div>
                             <div className="space-y-1">
                               {booking.highlights.slice(0, 2).map((highlight, idx) => (
-                                <div key={idx} className="flex items-center space-x-2 text-sm text-gray-700">
+                                <div
+                                  key={idx}
+                                  className="flex items-center space-x-2 text-sm text-gray-700"
+                                >
                                   <Star className="w-3 h-3 text-yellow-500 fill-current flex-shrink-0" />
                                   <span>{highlight}</span>
                                 </div>
@@ -198,7 +203,9 @@ export default function MyPackagesPage() {
                     <MapPin className="w-8 h-8 text-gray-400" />
                   </div>
                   <h3 className="text-xl font-light text-gray-900 mb-2">No Travel Packages Yet</h3>
-                  <p className="text-gray-600 mb-6">Start your adventure by booking your first travel package</p>
+                  <p className="text-gray-600 mb-6">
+                    Start your adventure by booking your first travel package
+                  </p>
                   <button
                     onClick={() => navigate('/packages')}
                     className="bg-gray-900 text-white px-6 py-3 font-medium hover:bg-gray-800 transition-colors"
@@ -207,7 +214,6 @@ export default function MyPackagesPage() {
                   </button>
                 </div>
               )}
-
             </div>
           </div>
         </div>
