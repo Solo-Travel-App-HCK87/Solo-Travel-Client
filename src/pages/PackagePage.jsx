@@ -4,6 +4,7 @@ import PackageCard from '../components/PackageCard';
 export default function PackagePage() {
   const packages = [
     {
+      id: 1,
       destination: 'Bali, Indonesia',
       image: 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop',
       duration: '7 Days',
@@ -21,6 +22,7 @@ export default function PackagePage() {
       tags: ['Beach', 'Culture', 'Adventure'],
     },
     {
+      id: 2,
       destination: 'Tokyo, Japan',
       image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop',
       duration: '8 Days',
@@ -32,6 +34,7 @@ export default function PackagePage() {
       tags: ['Culture', 'Food', 'Technology'],
     },
     {
+      id: 3,
       destination: 'Paris, France',
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
       duration: '6 Days',
@@ -43,6 +46,7 @@ export default function PackagePage() {
       tags: ['Romance', 'Art', 'History'],
     },
     {
+      id: 4,
       destination: 'Iceland',
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
       duration: '9 Days',
@@ -60,6 +64,7 @@ export default function PackagePage() {
       tags: ['Nature', 'Adventure', 'Photography'],
     },
     {
+      id: 5,
       destination: 'Thailand',
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
       duration: '10 Days',
@@ -71,6 +76,7 @@ export default function PackagePage() {
       tags: ['Beach', 'Food', 'Budget'],
     },
     {
+      id: 6,
       destination: 'Morocco',
       image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=400&h=300&fit=crop',
       duration: '8 Days',

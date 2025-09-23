@@ -34,7 +34,7 @@ export default function Navbar() {
               Home
             </NavLink>
             <NavLink
-              to="/package"
+              to="/packages"
               className={({ isActive }) =>
                 `text-white hover:text-blue-200 hover:bg-white/15 rounded-full transition-colors font-medium text-sm px-5 py-2 ${
                   isActive ? 'bg-white/25' : ''
