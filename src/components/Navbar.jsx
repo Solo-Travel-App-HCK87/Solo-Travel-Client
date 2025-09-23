@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Navbar() {
+  const navigate = useNavigate()
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -118,7 +119,10 @@ export default function Navbar() {
                     </button>
 
                     <div className="border-t border-gray-200/50 mt-2 pt-2">
-                      <button className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors">
+                      <button onClick={() => {
+                        localStorage.removeItem(`access_token`)
+                        navigate(`/login`)
+                      }} className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors">
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Logout</span>
                       </button>
