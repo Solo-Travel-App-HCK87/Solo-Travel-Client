@@ -1,29 +1,50 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { ArrowLeft, Send, Users, MapPin } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router';
 import { format } from 'date-fns';
 import socket from '../libs/socket';
+import { AuthContext } from '../contexts/auth';
 
 export default function ChatRoomPage() {
   const navigate = useNavigate();
   const { packageId } = useParams();
-  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+  const { profile, fetchProfile } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const params = useParams();
+
   useEffect(() => {
     socket.auth = {
       access_token: localStorage.getItem('access_token'),
+      roomId: params.packageId,
     };
     socket.disconnect().connect();
+    return () => {
+      socket.disconnect();
+      console.log('socket disconnected');
+    };
   }, []);
 
   useEffect(() => {
-    socket.on('message_info', (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+    socket.on(`travel:${params.packageId}`, (msg) => {
+      setMessages(msg);
+    });
+    socket.on(`users_online:${params.packageId}`, (data) => {
+      setUsers(data);
     });
     return () => {
-      socket.off('message_info');
+      socket.off(`travel:${params.packageId}`);
+      socket.off(`users_online:${params.packageId}`);
     };
   }, []);
+
+  console.log(users);
+
   const messagesEndRef = useRef(null);
 
   const packageInfo = {
@@ -227,43 +248,33 @@ export default function ChatRoomPage() {
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`flex ${
-                msg.access_token === localStorage.getItem('access_token')
-                  ? 'justify-end'
-                  : 'justify-start'
-              }`}
+              className={`flex ${msg.User.id === profile.id ? 'justify-end' : 'justify-start'}`}
             >
               <div
                 className={`flex space-x-3 max-w-xs lg:max-w-md ${
-                  msg.access_token === localStorage.getItem('access_token')
-                    ? 'flex-row-reverse space-x-reverse'
-                    : ''
+                  msg.User.id === profile.id ? 'flex-row-reverse space-x-reverse' : ''
                 }`}
               >
                 <img
                   src={
-                    msg.sender.ImageUrl ||
+                    msg.User.ImageUrl ||
                     'https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78='
                   }
-                  alt={msg.sender.firstName}
+                  alt={msg.User.firstName}
                   className="w-8 h-8 rounded-full flex-shrink-0"
                 />
                 <div
                   className={`${
-                    msg.access_token === localStorage.getItem('access_token')
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white text-gray-900'
+                    msg.User.id === profile.id ? 'bg-blue-600 text-white' : 'bg-white text-gray-900'
                   } rounded-2xl px-4 py-2 shadow-sm border border-gray-200`}
                 >
-                  {!msg.access_token === localStorage.getItem('access_token') && (
+                  {!msg.User.id === profile.id && (
                     <div className="text-xs font-medium text-gray-600 mb-1">{msg.user}</div>
                   )}
                   <div className="text-sm">{msg.message}</div>
                   <div
                     className={`text-xs mt-1 ${
-                      msg.access_token === localStorage.getItem('access_token')
-                        ? 'text-blue-100'
-                        : 'text-gray-500'
+                      msg.User.id === profile.id ? 'text-blue-100' : 'text-gray-500'
                     }`}
                   >
                     {format(new Date(msg.createdAt), 'h:mm a')}
