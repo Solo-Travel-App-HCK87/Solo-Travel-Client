@@ -1,50 +1,29 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Send, Users, MapPin } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router';
+import { format } from 'date-fns';
+import socket from '../libs/socket';
 
 export default function ChatRoomPage() {
   const navigate = useNavigate();
   const { packageId } = useParams();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      user: 'Sarah Johnson',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
-      message: 'Hey everyone! So excited for this Iceland trip! 🇮🇸',
-      time: '10:30 AM',
-      isMe: false,
-    },
-    {
-      id: 2,
-      user: 'Mike Chen',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-      message: 'Same here! Has anyone been to Iceland before? Any tips?',
-      time: '10:32 AM',
-      isMe: false,
-    },
-    {
-      id: 3,
-      user: 'You',
-      avatar:
-        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
-      message: 'This is my first time too! Looking forward to the Northern Lights 🌌',
-      time: '10:35 AM',
-      isMe: true,
-    },
-    {
-      id: 4,
-      user: 'Emma Wilson',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
-      message: "I heard the Blue Lagoon is amazing! Can't wait for the spa experience 💆‍♀️",
-      time: '10:38 AM',
-      isMe: false,
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    socket.auth = {
+      access_token: localStorage.getItem('access_token'),
+    };
+    socket.disconnect().connect();
+  }, []);
 
+  useEffect(() => {
+    socket.on('message_info', (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    });
+    return () => {
+      socket.off('message_info');
+    };
+  }, []);
   const messagesEndRef = useRef(null);
 
   const packageInfo = {
@@ -54,7 +33,6 @@ export default function ChatRoomPage() {
 
   const currentPackage = packageInfo[packageId] || packageInfo[1];
 
-  // Participants data with online/offline status
   const participants = [
     {
       id: 1,
@@ -129,23 +107,6 @@ export default function ChatRoomPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (message.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        user: 'You',
-        avatar:
-          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
-        message: message.trim(),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isMe: true,
-      };
-      setMessages([...messages, newMessage]);
-      setMessage('');
-    }
-  };
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex">
@@ -263,29 +224,49 @@ export default function ChatRoomPage() {
 
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-100/50 backdrop-blur-sm">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'}`}>
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                msg.access_token === localStorage.getItem('access_token')
+                  ? 'justify-end'
+                  : 'justify-start'
+              }`}
+            >
               <div
                 className={`flex space-x-3 max-w-xs lg:max-w-md ${
-                  msg.isMe ? 'flex-row-reverse space-x-reverse' : ''
+                  msg.access_token === localStorage.getItem('access_token')
+                    ? 'flex-row-reverse space-x-reverse'
+                    : ''
                 }`}
               >
                 <img
-                  src={msg.avatar}
-                  alt={msg.user}
+                  src={
+                    msg.sender.ImageUrl ||
+                    'https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78='
+                  }
+                  alt={msg.sender.firstName}
                   className="w-8 h-8 rounded-full flex-shrink-0"
                 />
                 <div
                   className={`${
-                    msg.isMe ? 'bg-blue-600 text-white' : 'bg-white text-gray-900'
+                    msg.access_token === localStorage.getItem('access_token')
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white text-gray-900'
                   } rounded-2xl px-4 py-2 shadow-sm border border-gray-200`}
                 >
-                  {!msg.isMe && (
+                  {!msg.access_token === localStorage.getItem('access_token') && (
                     <div className="text-xs font-medium text-gray-600 mb-1">{msg.user}</div>
                   )}
                   <div className="text-sm">{msg.message}</div>
-                  <div className={`text-xs mt-1 ${msg.isMe ? 'text-blue-100' : 'text-gray-500'}`}>
-                    {msg.time}
+                  <div
+                    className={`text-xs mt-1 ${
+                      msg.access_token === localStorage.getItem('access_token')
+                        ? 'text-blue-100'
+                        : 'text-gray-500'
+                    }`}
+                  >
+                    {format(new Date(msg.createdAt), 'h:mm a')}
                   </div>
                 </div>
               </div>
@@ -296,19 +277,27 @@ export default function ChatRoomPage() {
 
         {/* Message Input */}
         <div className="bg-white border-t border-gray-200 p-4">
-          <form onSubmit={handleSendMessage} className="flex space-x-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const msg = formData.get('message');
+              if (!msg) return;
+              socket.emit('chat_message', { message: msg });
+              e.target.reset();
+            }}
+            className="flex space-x-4"
+          >
             <div className="flex-1">
               <input
                 type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                name="message"
                 placeholder="Type your message..."
                 className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <button
               type="submit"
-              disabled={!message.trim()}
               className="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send className="w-5 h-5" />
