@@ -72,7 +72,7 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-2 text-white hover:text-blue-200 transition-colors font-medium text-sm bg-white/15 backdrop-blur-sm rounded-full px-4 py-2"
+                className="cursor-pointer flex items-center space-x-2 text-white hover:text-blue-200 transition-colors font-medium text-sm bg-white/15 backdrop-blur-sm rounded-full px-4 py-2"
               >
                 <Users className="w-4 h-4" />
                 <span>Profile</span>
@@ -113,7 +113,7 @@ export default function Navbar() {
                     <button onClick={() => {
                       navigate('/profile')
 
-                    }} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
+                    }} className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
                       <User className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">Profile Details</span>
                     </button>
@@ -123,7 +123,7 @@ export default function Navbar() {
                         navigate('/my-packages');
                         setIsProfileOpen(false);
                       }}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
+                      className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
                     >
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
@@ -138,7 +138,7 @@ export default function Navbar() {
                           localStorage.removeItem(`access_token`);
                           navigate(`/login`);
                         }}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors"
+                        className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Logout</span>
