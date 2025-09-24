@@ -1,17 +1,94 @@
 import { MapPin } from 'lucide-react';
 import PackageCard from '../components/PackageCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchPackages } from '../store/packageSlice';
+import { useSearchParams } from 'react-router';
 
 export default function PackagePage() {
   const { packages } = useSelector((state) => state.package);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchDestination, setSearchDestination] = useState(searchParams.get('search') || '');
+  const [sortOption, setSortOption] = useState(searchParams.get('sort') || '');
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPackages());
-  }, []);
+    const initialSearch = searchParams.get('search');
+    const initialSort = searchParams.get('sort');
+    const params = {};
+    
+    if (initialSearch) {
+      params.search = initialSearch;
+    }
+    
+    if (initialSort) {
+      params.sort = initialSort;
+    }
+    
+    dispatch(fetchPackages(params));
+  }, [dispatch, searchParams]);
+
+  const handleSearch = () => {
+    const params = {};
+    
+    if (searchDestination.trim()) {
+      params.search = searchDestination.trim();
+    }
+    
+    if (sortOption) {
+      params.sort = sortOption;
+    }
+    
+    dispatch(fetchPackages(params));
+    
+    // Update URL params
+    const newSearchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      newSearchParams.append('search', searchDestination.trim());
+    }
+    if (sortOption) {
+      newSearchParams.append('sort', sortOption);
+    }
+    setSearchParams(newSearchParams);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSortChange = (e) => {
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    
+    // Auto search ketika sort berubah
+    const params = {};
+    
+    if (searchDestination.trim()) {
+      params.search = searchDestination.trim();
+    }
+    
+    if (newSortOption) {
+      params.sort = newSortOption;
+    }
+    
+    console.log('Sort params being sent:', params); // Debug log
+    dispatch(fetchPackages(params));
+    
+    // Update URL params
+    const newSearchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      newSearchParams.append('search', searchDestination.trim());
+    }
+    if (newSortOption) {
+      newSearchParams.append('sort', newSortOption);
+    }
+    setSearchParams(newSearchParams);
+  };
+
+  console.log(packages)
 
   return (
     <div className="min-h-screen">
@@ -44,25 +121,39 @@ export default function PackagePage() {
       <div className="relative z-30 -mt-16" style={{ transform: 'translateY(-20px)' }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="bg-white rounded-2xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-4 border-white/20">
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-4 gap-4">
               <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200">
                 <MapPin className="w-5 h-5 mr-3 text-gray-500" />
                 <input
                   type="text"
                   placeholder="Search destination"
+                  value={searchDestination}
+                  onChange={(e) => setSearchDestination(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="flex-1 outline-none text-gray-700 bg-transparent"
                 />
               </div>
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200">
+              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 relative">
                 <span className="text-gray-500 mr-3">💰</span>
-                <select className="flex-1 outline-none text-gray-700 bg-transparent">
-                  <option>All Budgets</option>
-                  <option>$500 - $1000</option>
-                  <option>$1000 - $2000</option>
-                  <option>$2000+</option>
+                <select 
+                  value={sortOption} 
+                  onChange={handleSortChange}
+                  className="flex-1 outline-none text-gray-700 bg-transparent appearance-none cursor-pointer pr-6"
+                >
+                  <option value="">Sort by Price</option>
+                  <option value="ASC">Price: Low to High</option>
+                  <option value="DESC">Price: High to Low</option>
                 </select>
+                <div className="absolute right-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
-              <button className="bg-gray-800 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 transition-colors">
+              <button 
+                onClick={handleSearch}
+                className="cursor-pointer bg-gray-800 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 transition-colors md:col-span-2"
+              >
                 Search Packages
               </button>
             </div>

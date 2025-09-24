@@ -16,11 +16,26 @@ export const packageSlice = createSlice({
 
 export const fetchPackages = createAsyncThunk(
   'packages/getData',
-  async function getPackage(params, thunkAPI) {
+  async function getPackage(params = {}, thunkAPI) {
     try {
+      const { search, sort } = params;
+      const queryParams = new URLSearchParams();
+      
+      if (search) {
+        queryParams.append('search', search);
+      }
+      
+      if (sort) {
+        queryParams.append('sort', sort);
+      }
+      
+      const url = `/packages${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       const { data } = await http({
         method: 'GET',
-        url: '/packages',
+        url: url,
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem("access_token")}`
+        }
       });
       return data;
     } catch (error) {

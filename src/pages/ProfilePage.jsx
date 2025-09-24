@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
 import { AuthContext } from '../contexts/auth';
