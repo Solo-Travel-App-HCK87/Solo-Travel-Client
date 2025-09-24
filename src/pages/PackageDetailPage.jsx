@@ -18,6 +18,7 @@ import { http } from '../helpers/http';
 import { showError } from '../helpers/alert';
 
 export default function PackageDetailPage() {
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -58,7 +59,29 @@ export default function PackageDetailPage() {
 
     } catch (error) {
       
-      showError(error.response.data.message);
+      showError(error);
+
+    }
+
+  }
+
+  const buyPackage = async () => {
+
+    try {
+      
+      const response = await http({
+        url : `/buys/${id}`,
+        method : 'POST',
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      navigate('/my-packages')
+
+    } catch (error) {
+      
+      showError(error)
 
     }
 
@@ -131,7 +154,11 @@ export default function PackageDetailPage() {
             </div>
 
             {/* CTA Button */}
-            <button className="w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
+            <button onClick={() => {
+
+              buyPackage()
+
+            }} className="w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
               Book Now
             </button>
 

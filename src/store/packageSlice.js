@@ -33,6 +33,9 @@ export const fetchPackages = createAsyncThunk(
       const { data } = await http({
         method: 'GET',
         url: url,
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem("access_token")}`
+        }
       });
       return data;
     } catch (error) {
