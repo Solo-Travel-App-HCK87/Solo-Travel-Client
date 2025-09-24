@@ -1,126 +1,53 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
+import { AuthContext } from '../contexts/auth';
 
 export default function ProfilePage() {
-  const params = useParams();
-  const [profile, setProfile] = useState({
-    firstName: '',
-    lastName: '',
-    imageUrl: '',
-  });
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const { profile, fetchProfile } = useContext(AuthContext);
 
   // Fetch user data on component mount
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setInitialLoading(true);
-        const response = await http({
-          method: 'GET',
-          url: `/users/${params.id}`,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        });
-
-        const userData = response.data;
-        setProfile({
-          firstName: userData.firstName || '',
-          lastName: userData.lastName || '',
-          imageUrl: userData.imageUrl || '',
-        });
-      } catch (error) {
-        showError(error);
-      } finally {
+    if (profile.id) {
+      setInitialLoading(true);
+      fetchProfile().then(() => {
         setInitialLoading(false);
-      }
-    };
-
-    if (params.id) {
-      fetchUserData();
+      });
     }
-  }, [params.id]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile({ ...profile, [name]: value });
-  };
+  }, [profile.id]);
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
+    console.log(file, '<<< file');
     if (file) {
-      if (!file.type.startsWith('image/')) {
-        showError('Please select a valid image file');
-        return;
-      }
-
-      // Validate file size (2MB limit)
-      if (file.size > 2 * 1024 * 1024) {
-        showError('File size must be less than 2MB');
-        return;
-      }
-
       try {
         setLoading(true);
 
         // Create FormData for file upload
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('ImageUrl', file);
 
         const response = await http({
           method: 'PATCH',
-          url: `/users/${params.id}/image`,
+          url: `/profile/image`,
           data: formData,
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            'Content-Type': 'multipart/form-data',
           },
         });
+        console.log(response.data, '<<< patch image client');
 
         // Update profile with new image URL from server response
-        setProfile({ ...profile, imageUrl: response.data.imageUrl });
+        fetchProfile();
       } catch (error) {
         showError(error);
+        console.log(error);
       } finally {
         setLoading(false);
       }
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-
-      const response = await http({
-        method: 'PUT',
-        url: `/users/${params.id}`,
-        data: {
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-
-      // Update profile with response data
-      setProfile((prevProfile) => ({
-        ...prevProfile,
-        firstName: response.data.firstName,
-        lastName: response.data.lastName,
-      }));
-
-      // Show success message or redirect
-      console.log('Profile updated successfully:', response.data);
-    } catch (error) {
-      showError(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -163,16 +90,16 @@ export default function ProfilePage() {
         </div>
 
         <div className="relative z-10 flex items-center justify-center min-h-screen py-20 px-4">
-          <div className="max-w-[480px] w-full">
+          <div className="max-w-[480px] w-full mt-5">
             <div className="p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl">
               <h1 className="text-slate-900 text-center text-3xl font-semibold">Profile</h1>
 
               {/* Profile Picture Section */}
               <div className="mt-8 flex flex-col items-center">
                 <div className="relative">
-                  {profile.imageUrl ? (
+                  {profile.ImageUrl ? (
                     <img
-                      src={profile.imageUrl}
+                      src={profile.ImageUrl}
                       alt="Profile"
                       className="w-24 h-24 rounded-full object-cover border-4 border-blue-600"
                     />
@@ -190,13 +117,17 @@ export default function ProfilePage() {
                   )}
                 </div>
                 <label
-                  className={`mt-4 cursor-pointer px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`mt-4 cursor-pointer px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                   } text-white`}
                 >
+                  {loading && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  )}
                   {loading ? 'Uploading...' : 'Upload Picture'}
                   <input
                     type="file"
+                    name="ImageUrl"
                     accept="image/*"
                     onChange={handleImageChange}
                     className="hidden"
@@ -205,7 +136,7 @@ export default function ProfilePage() {
                 </label>
               </div>
 
-              <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <form className="mt-8 space-y-6">
                 <div>
                   <label className="text-slate-900 text-sm font-medium mb-2 block">
                     First Name
@@ -213,10 +144,9 @@ export default function ProfilePage() {
                   <div className="relative flex items-center">
                     <input
                       name="firstName"
-                      onChange={handleChange}
                       value={profile.firstName}
                       type="text"
-                      required
+                      disabled
                       className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 pr-8 rounded-md outline-blue-600"
                       placeholder="Enter First Name"
                     />
@@ -241,10 +171,9 @@ export default function ProfilePage() {
                   <div className="relative flex items-center">
                     <input
                       name="lastName"
-                      onChange={handleChange}
                       value={profile.lastName}
                       type="text"
-                      required
+                      disabled
                       className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 pr-8 rounded-md outline-blue-600"
                       placeholder="Enter Last Name"
                     />
@@ -262,18 +191,6 @@ export default function ProfilePage() {
                       />
                     </svg>
                   </div>
-                </div>
-
-                <div className="!mt-12">
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className={`w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white focus:outline-none cursor-pointer ${
-                      loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
-                  >
-                    {loading ? 'Updating...' : 'Update Profile'}
-                  </button>
                 </div>
               </form>
             </div>

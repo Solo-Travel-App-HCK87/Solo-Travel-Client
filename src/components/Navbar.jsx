@@ -22,7 +22,7 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  console.log(profile);
+  // console.log(profile);
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 w-full">
@@ -111,8 +111,8 @@ export default function Navbar() {
                   {/* Menu Items */}
                   <div className="py-2">
                     <button onClick={() => {
-                      navigate('/profile');
-                      setIsProfileOpen(false);
+                      navigate('/profile')
+
                     }} className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
                       <User className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">Profile Details</span>
