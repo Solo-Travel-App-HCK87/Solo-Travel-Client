@@ -88,6 +88,8 @@ export default function PackagePage() {
     setSearchParams(newSearchParams);
   };
 
+  console.log(packages)
+
   return (
     <div className="min-h-screen">
       <div
