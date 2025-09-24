@@ -9,34 +9,26 @@ export default function MyPackagesPage() {
   const [myPackages, setMyPackages] = useState([]);
 
   const fetchData = async () => {
-
     try {
-      
       const response = await http({
-        url : '/my-packages',
-        method : 'GET',
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem("access_token")}`
-        }
-      })
+        url: '/my-packages',
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
 
-      setMyPackages(response.data)
-
+      setMyPackages(response.data);
     } catch (error) {
-      
-      showError(error)
-
+      showError(error);
     }
-
-  }
+  };
 
   useState(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
-
-  console.log(myPackages)
-
+  console.log(myPackages);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -65,7 +57,9 @@ export default function MyPackagesPage() {
             <div className="space-y-6 mb-12">
               <div className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
                 <div className="text-center">
-                  <div className="text-3xl font-light text-gray-900 mb-1">{myPackages.length && myPackages.length}</div>
+                  <div className="text-3xl font-light text-gray-900 mb-1">
+                    {myPackages.length && myPackages.length}
+                  </div>
                   <div className="text-sm text-gray-500 font-medium tracking-wide uppercase">
                     Total Bookings
                   </div>
@@ -104,7 +98,7 @@ export default function MyPackagesPage() {
                       className="text-6xl font-bold tracking-tight mb-4 text-white drop-shadow-2xl"
                       style={{
                         fontFamily: 'Inter, system-ui, sans-serif',
-                        textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)'
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)',
                       }}
                     >
                       My Adventures
@@ -127,91 +121,100 @@ export default function MyPackagesPage() {
               <div className="space-y-8">
                 <h2 className="text-2xl font-light text-gray-900 tracking-wide">Your Bookings</h2>
                 <div className="space-y-6">
-                  {myPackages.length && myPackages.map((booking, index) => (
-                    <div
-                      key={index}
-                      className="bg-white border border-gray-200 p-2 rounded-2xl shadow-lg overflow-hidden"
-                    >
-                      <div className="grid grid-cols-12 gap-0">
-                        {/* Image - Left Side */}
-                        <div className="col-span-4">
-                          <img
-                            src={booking.TravelPackage.image_url}
-                            alt={booking.TravelPackage.destination_name}
-                            className="w-full h-full object-cover rounded-2xl"
-                          />
-                        </div>
-
-                        {/* Content - Right Side */}
-                        <div className="col-span-8 p-6 space-y-4">
-                          {/* Header */}
-                          <div>
-                            <h3 className="text-xl font-light text-gray-900 tracking-wide mb-1">
-                              {booking.destination}
-                            </h3>
-                            <div className="text-sm text-gray-500 font-medium">
-                              Booking ID: {booking.OrderId}
-                            </div>
+                  {myPackages.length &&
+                    myPackages.map((booking, index) => (
+                      <div
+                        key={index}
+                        className="bg-white border border-gray-200 p-2 rounded-2xl shadow-lg overflow-hidden"
+                      >
+                        <div className="grid grid-cols-12 gap-0">
+                          {/* Image - Left Side */}
+                          <div className="col-span-4">
+                            <img
+                              src={booking.TravelPackage.image_url}
+                              alt={booking.TravelPackage.destination_name}
+                              className="w-full h-full object-cover rounded-2xl"
+                            />
                           </div>
 
-                          {/* Details Grid */}
-                          <div className="grid grid-cols-3 gap-4 text-sm">
+                          {/* Content - Right Side */}
+                          <div className="col-span-8 p-6 space-y-4">
+                            {/* Header */}
                             <div>
-                              <div className="text-gray-500 font-medium mb-1">Duration</div>
-                              <div className="text-gray-900">{booking.TravelPackage.duration_days}</div>
+                              <h3 className="text-xl font-light text-gray-900 tracking-wide mb-1">
+                                {booking.destination}
+                              </h3>
+                              <div className="text-sm text-gray-500 font-medium">
+                                Booking ID: {booking.OrderId}
+                              </div>
                             </div>
-                            <div>
-                              <div className="text-gray-500 font-medium mb-1">Departure</div>
-                              <div className="text-gray-900">{booking.TravelPackage.departure_date.split('T')[0]}</div>
-                            </div>
-                            <div>
-                              <div className="text-gray-500 font-medium mb-1">Price Paid</div>
-                              <div className="text-gray-900 font-semibold">{booking.TravelPackage.current_price}</div>
-                            </div>
-                          </div>
 
-                          {/* Highlights */}
-                          <div>
-                            <div className="text-sm text-gray-500 font-medium mb-2">
-                              Package Highlights
-                            </div>
-                            <div className="space-y-1">
-                              {booking.TravelPackage.highlights.slice(0, 2).map((highlight, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center space-x-2 text-sm text-gray-700"
-                                >
-                                  <Star className="w-3 h-3 text-yellow-500 fill-current flex-shrink-0" />
-                                  <span>{highlight}</span>
+                            {/* Details Grid */}
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <div className="text-gray-500 font-medium mb-1">Duration</div>
+                                <div className="text-gray-900">
+                                  {booking.TravelPackage.duration_days}
                                 </div>
-                              ))}
-                              {booking.TravelPackage.highlights.length > 2 && (
-                                <div className="text-xs text-gray-500">
-                                  +{booking.TravelPackage.highlights.length - 2} more highlights
+                              </div>
+                              <div>
+                                <div className="text-gray-500 font-medium mb-1">Departure</div>
+                                <div className="text-gray-900">
+                                  {booking.TravelPackage.departure_date.split('T')[0]}
                                 </div>
-                              )}
+                              </div>
+                              <div>
+                                <div className="text-gray-500 font-medium mb-1">Price Paid</div>
+                                <div className="text-gray-900 font-semibold">
+                                  {booking.TravelPackage.current_price}
+                                </div>
+                              </div>
                             </div>
-                          </div>
 
-                          {/* Actions */}
-                          <div className="flex space-x-3 pt-2">
-                            <button
-                              onClick={() => navigate(`/packages/${booking.TravelPackage.id}`)}
-                              className="cursor-pointer px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
-                            >
-                              View Details
-                            </button>
-                            <button
-                              onClick={() => navigate(`/chat/room/${booking.TravelPackage.id}`)}
-                              className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
-                            >
-                              Chat Room
-                            </button>
+                            {/* Highlights */}
+                            <div>
+                              <div className="text-sm text-gray-500 font-medium mb-2">
+                                Package Highlights
+                              </div>
+                              <div className="space-y-1">
+                                {booking.TravelPackage.highlights
+                                  .slice(0, 2)
+                                  .map((highlight, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="flex items-center space-x-2 text-sm text-gray-700"
+                                    >
+                                      <Star className="w-3 h-3 text-yellow-500 fill-current flex-shrink-0" />
+                                      <span>{highlight}</span>
+                                    </div>
+                                  ))}
+                                {booking.TravelPackage.highlights.length > 2 && (
+                                  <div className="text-xs text-gray-500">
+                                    +{booking.TravelPackage.highlights.length - 2} more highlights
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex space-x-3 pt-2">
+                              <button
+                                onClick={() => navigate(`/packages/${booking.TravelPackage.id}`)}
+                                className="cursor-pointer px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                              >
+                                View Details
+                              </button>
+                              <button
+                                onClick={() => navigate(`/chat/room/${booking.TravelPackage.id}`)}
+                                className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                              >
+                                Chat Room
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 
