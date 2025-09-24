@@ -1,13 +1,14 @@
 import { ArrowLeft, MapPin, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
+import { AuthContext } from '../contexts/auth';
 
 export default function MyPackagesPage() {
   const navigate = useNavigate();
   const [myPackages, setMyPackages] = useState([]);
-
+  const { profile, fetchProfile } = useContext(AuthContext);
   const fetchData = async () => {
     try {
       const response = await http({
@@ -24,7 +25,8 @@ export default function MyPackagesPage() {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
+    fetchProfile();
     fetchData();
   }, []);
 
@@ -104,7 +106,7 @@ export default function MyPackagesPage() {
                       My Adventures
                     </h1>
                     <p className="text-xl font-medium tracking-wide mb-4 text-white drop-shadow-lg">
-                      Hi Gerry, Ready for your next adventure?
+                      Hi {profile.firstName}, Ready for your next adventure?
                     </p>
                     <div className="flex items-center justify-center space-x-2 opacity-90">
                       <MapPin className="w-5 h-5" strokeWidth={1.5} />
@@ -125,15 +127,15 @@ export default function MyPackagesPage() {
                     myPackages.map((booking, index) => (
                       <div
                         key={index}
-                        className="bg-white border border-gray-200 p-2 rounded-2xl shadow-lg overflow-hidden"
+                        className="bg-white border border-gray-200 p-2 rounded-2xl shadow-lg overflow-hidden h-[320px]"
                       >
-                        <div className="grid grid-cols-12 gap-0">
+                        <div className="grid grid-cols-12 gap-0 h-full">
                           {/* Image - Left Side */}
-                          <div className="col-span-4">
+                          <div className="col-span-4 h-full overflow-hidden rounded-2xl">
                             <img
                               src={booking.TravelPackage.image_url}
                               alt={booking.TravelPackage.destination_name}
-                              className="w-full h-full object-cover rounded-2xl"
+                              className="w-full h-full object-cover"
                             />
                           </div>
 

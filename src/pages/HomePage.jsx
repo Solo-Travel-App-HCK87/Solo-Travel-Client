@@ -19,25 +19,9 @@ export default function HomePage() {
     navigate(`/packages${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   const handleSortChange = (e) => {
     const newSortOption = e.target.value;
     setSortOption(newSortOption);
-    // Auto navigate ketika sort dipilih
-    const searchParams = new URLSearchParams();
-    if (searchDestination.trim()) {
-      searchParams.append('search', searchDestination.trim());
-    }
-    if (newSortOption) {
-      searchParams.append('sort', newSortOption);
-    }
-    console.log('HomePage navigating with params:', searchParams.toString()); // Debug log
-    navigate(`/packages${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
   };
   return (
     <div className="h-screen overflow-hidden relative">
@@ -74,15 +58,14 @@ export default function HomePage() {
                   placeholder="Destination"
                   value={searchDestination}
                   onChange={(e) => setSearchDestination(e.target.value)}
-                  onKeyDown={handleKeyDown}
                   className="flex-1 outline-none text-gray-700 text-base"
                 />
               </div>
 
               <div className="flex items-center bg-white rounded-full px-6 py-4 flex-1 relative">
                 <span className="text-gray-500 mr-4 text-lg">💰</span>
-                <select 
-                  value={sortOption} 
+                <select
+                  value={sortOption}
                   onChange={handleSortChange}
                   className="cursor-pointer flex-1 outline-none text-gray-700 text-base bg-transparent appearance-none cursor-pointer pr-8"
                 >
@@ -96,6 +79,16 @@ export default function HomePage() {
                   </svg>
                 </div>
               </div>
+
+              <button
+                onClick={handleSearch}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-4 font-semibold text-base transition-colors duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Search
+              </button>
             </div>
           </div>
         </div>
