@@ -3,7 +3,7 @@ import PackageCard from '../components/PackageCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { fetchPackages } from '../store/packageSlice';
-import { useLocation, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 
 export default function PackagePage() {
   const { packages } = useSelector((state) => state.package);
