@@ -13,6 +13,8 @@ export default function PackagePage() {
     dispatch(fetchPackages());
   }, []);
 
+  console.log(packages)
+
   return (
     <div className="min-h-screen">
       <div

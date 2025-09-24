@@ -13,98 +13,65 @@ import {
   Camera,
   Flame,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { http } from '../helpers/http';
+import { showError } from '../helpers/alert';
 
 export default function PackageDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const packages = [
-    {
-      id: 4,
-      destination: 'Iceland',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop',
-      duration: '9 Days',
-      price: '$1,599',
-      originalPrice: '$2,999',
-      includes: [
-        'Flight',
-        'Accommodation',
-        'Car rental',
-        'Random travel buddy',
-        'Northern lights tour',
-      ],
-      availableSlots: 4,
-      nextDeparture: 'Feb 1, 2026',
-      tags: ['Nature', 'Adventure', 'Photography'],
-      description:
-        'Discover the land of fire and ice with its dramatic landscapes, geysers, waterfalls, and the magical Northern Lights. Perfect for adventure seekers and photography enthusiasts.',
-      itinerary: [
-        'Day 1: Arrival in Reykjavik - city exploration',
-        'Day 2: Golden Circle tour - Geysir and Gullfoss',
-        'Day 3: South Coast - Seljalandsfoss and Skógafoss',
-        'Day 4: Glacier hiking and ice caves',
-        'Day 5: Jökulsárlón glacier lagoon',
-        'Day 6: Blue Lagoon geothermal spa',
-        'Day 7-8: Northern Lights hunting',
-        'Day 9: Departure from Reykjavik',
-      ],
-      highlights: [
-        'Northern Lights photography workshop',
-        'Glacier hiking with professional guide',
-        'Blue Lagoon luxury spa experience',
-        'Ice cave exploration',
-        'Geothermal hot springs',
-        'Professional photo sessions at iconic locations',
-      ],
-      preparations: [
-        {
-          icon: FileText,
-          title: 'Documents',
-          items: [
-            'Valid passport (6+ months)',
-            'No visa required (90 days)',
-            'Travel insurance',
-            'Car rental license',
-          ],
-        },
-        {
-          icon: Shirt,
-          title: 'Clothing',
-          items: [
-            'Thermal underwear',
-            'Waterproof jacket',
-            'Warm boots',
-            'Gloves and hat',
-            'Swimwear for hot springs',
-          ],
-        },
-        {
-          icon: Backpack,
-          title: 'Essentials',
-          items: [
-            'Sunglasses for snow glare',
-            'Lip balm and moisturizer',
-            'Personal medications',
-            'Hand warmers',
-            'Emergency snacks',
-          ],
-        },
-        {
-          icon: Camera,
-          title: 'Electronics',
-          items: [
-            'DSLR for Northern Lights',
-            'Extra batteries (cold drains them)',
-            'Tripod',
-            'Memory cards',
-            'Waterproof camera bag',
-          ],
-        },
-      ],
-    },
-  ];
+  const [packageData, setPackageData] = useState({
+    destination_name: '',
+    location: '',
+    duration_days: '',
+    original_price: 0,
+    current_price: 0,
+    discount_percentage: 0,
+    available_slots: '',
+    departure_date: '',
+    description: '',
+    image_url: '',
+    categories: '',
+    inclusions: [],
+    itinerary: [],
+    preparation_docs: [],
+    preparation_clothing: [],
+    preparation_essentials: [],
+    preparation_electronics: [],
+    highlights: []
+  })
 
-  const packageData = packages.find((pkg) => pkg.id === parseInt(id)) || packages[0];
+  const fetchData = async () => {
+
+    try {
+      
+      const response = await http({
+        url : `/packages/${id}`,
+        method : 'GET',
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+
+      setPackageData(response.data)
+
+    } catch (error) {
+      
+      showError(error.response.data.message);
+
+    }
+
+  }
+
+
+  useEffect(() => {
+
+    fetchData();
+
+  }, [])
+
+  console.log(packageData)
 
   return (
     <div className="min-h-screen bg-white">
@@ -133,14 +100,14 @@ export default function PackageDetailPage() {
             <div className="mb-12">
               <div className="flex items-baseline space-x-4 mb-3">
                 <span className="text-gray-400 line-through text-lg font-light tracking-wide">
-                  {packageData.originalPrice}
+                  {packageData.original_price}
                 </span>
                 <span className="bg-gray-100 text-gray-700 px-3 py-1 text-xs font-medium tracking-wide uppercase">
                   Save 47%
                 </span>
               </div>
               <div className="text-4xl font-light text-gray-900 mb-2 tracking-tight">
-                {packageData.price}
+                {packageData.current_price}
               </div>
               <div className="text-gray-500 font-light tracking-wide">per person</div>
               <div className="mt-6 pt-6 border-t border-gray-100"></div>
@@ -152,7 +119,7 @@ export default function PackageDetailPage() {
                 What's Included
               </h3>
               <div className="space-y-4">
-                {packageData.includes.map((item, index) => (
+                {packageData.inclusions.map((item, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <div className="w-4 h-4 border border-gray-300 rounded-sm flex items-center justify-center">
                       <Check className="w-3 h-3 text-gray-600" strokeWidth={2} />
@@ -172,7 +139,7 @@ export default function PackageDetailPage() {
             <div className="bg-gray-50 border border-gray-200 p-4 flex items-center space-x-3">
               <Flame className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
               <span className="text-sm text-gray-700 font-light">
-                Only {packageData.availableSlots} spots remaining
+                Only {packageData.available_slots} spots remaining
               </span>
             </div>
           </div>
@@ -183,7 +150,7 @@ export default function PackageDetailPage() {
             <div className="relative h-[60vh] m-4">
               <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src={packageData.image}
+                  src={packageData.image_url}
                   alt="Iceland landscape"
                   className="w-full h-full object-cover"
                 />
@@ -215,7 +182,7 @@ export default function PackageDetailPage() {
                         <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
                           Duration
                         </div>
-                        <div className="text-white font-light">{packageData.duration}</div>
+                        <div className="text-white font-light">{packageData.duration_days}</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -225,7 +192,7 @@ export default function PackageDetailPage() {
                           Available
                         </div>
                         <div className="text-white font-light">
-                          {packageData.availableSlots} slots left
+                          {packageData.available_slots} slots left
                         </div>
                       </div>
                     </div>
@@ -235,14 +202,14 @@ export default function PackageDetailPage() {
                         <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
                           Departure
                         </div>
-                        <div className="text-white font-light">{packageData.nextDeparture}</div>
+                        <div className="text-white font-light">{packageData.departure_date.split('T')[0]}</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Tags */}
                   <div className="flex space-x-3">
-                    {packageData.tags.map((tag, index) => (
+                    {packageData.highlights.map((tag, index) => (
                       <span
                         key={index}
                         className="border border-white/30 text-white px-4 py-2 text-sm font-light tracking-wide backdrop-blur-sm bg-white/10 rounded-lg"
@@ -268,33 +235,33 @@ export default function PackageDetailPage() {
               </div>
 
               {/* Day by Day Itinerary */}
-              <div className="space-y-8">
-                <h2 className="text-2xl font-light text-gray-900 tracking-wide">
-                  Day by Day Itinerary
-                </h2>
-                <div className="space-y-4">
-                  {packageData.itinerary.map((day, index) => (
-                    <div
-                      key={index}
-                      className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg"
-                    >
-                      <div className="flex items-start space-x-6">
-                        <div className="w-8 h-8 border border-gray-300 flex items-center justify-center text-sm font-light text-gray-600 flex-shrink-0">
-                          {index + 1}
-                        </div>
-                        <div>
-                          <h3 className="text-gray-900 font-light tracking-wide mb-2">
-                            {day.split(':')[0]}
-                          </h3>
-                          <p className="text-gray-600 font-light leading-relaxed">
-                            {day.split(':').slice(1).join(':').trim()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+<div className="space-y-8">
+  <h2 className="text-2xl font-light text-gray-900 tracking-wide">
+    Day by Day Itinerary
+  </h2>
+  <div className="space-y-4">
+    {packageData.itinerary.map((dayItem, index) => (
+      <div
+        key={index}
+        className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg"
+      >
+        <div className="flex items-start space-x-6">
+          <div className="w-8 h-8 border border-gray-300 flex items-center justify-center text-sm font-light text-gray-600 flex-shrink-0">
+            {dayItem.day}
+          </div>
+          <div>
+            <h3 className="text-gray-900 font-light tracking-wide mb-2">
+              Day {dayItem.day}
+            </h3>
+            <p className="text-gray-600 font-light leading-relaxed">
+              {dayItem.activity}
+            </p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
               {/* Package Highlights */}
               <div className="space-y-8">
@@ -318,38 +285,84 @@ export default function PackageDetailPage() {
                 </div>
               </div>
 
-              {/* What to Prepare */}
-              <div className="space-y-8">
-                <h2 className="text-2xl font-light text-gray-900 tracking-wide">What to Prepare</h2>
-                <div className="grid grid-cols-2 gap-8">
-                  {packageData.preparations.map((category, index) => {
-                    const IconComponent = category.icon;
-                    return (
-                      <div
-                        key={index}
-                        className="bg-white border border-gray-200 p-8 rounded-xl shadow-lg"
-                      >
-                        <div className="flex items-center space-x-4 mb-6">
-                          <IconComponent className="w-5 h-5 text-gray-400" strokeWidth={1.5} />
-                          <h3 className="text-lg font-light text-gray-900 tracking-wide">
-                            {category.title}
-                          </h3>
-                        </div>
-                        <ul className="space-y-3">
-                          {category.items.map((item, itemIndex) => (
-                            <li key={itemIndex} className="flex items-start space-x-3">
-                              <div className="w-1 h-1 bg-gray-400 rounded-full mt-3 flex-shrink-0"></div>
-                              <span className="text-gray-600 font-light text-sm leading-relaxed">
-                                {item}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              {/* Package Highlights */}
+{/* TAMBAHKAN INI - What to Prepare */}
+<div className="space-y-8">
+  <h2 className="text-2xl font-light text-gray-900 tracking-wide">
+    What to Prepare
+  </h2>
+  <div className="grid grid-cols-2 gap-8">
+    {/* Documents */}
+    {packageData.preparation_docs.length > 0 && (
+      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+        <div className="flex items-center space-x-3 mb-4">
+          <FileText className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+          <h3 className="text-lg font-light text-gray-900">Documents</h3>
+        </div>
+        <ul className="space-y-2">
+          {packageData.preparation_docs.map((item, index) => (
+            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
+              • {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* Clothing */}
+    {packageData.preparation_clothing.length > 0 && (
+      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+        <div className="flex items-center space-x-3 mb-4">
+          <Shirt className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+          <h3 className="text-lg font-light text-gray-900">Clothing</h3>
+        </div>
+        <ul className="space-y-2">
+          {packageData.preparation_clothing.map((item, index) => (
+            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
+              • {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* Essentials */}
+    {packageData.preparation_essentials.length > 0 && (
+      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+        <div className="flex items-center space-x-3 mb-4">
+          <Backpack className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+          <h3 className="text-lg font-light text-gray-900">Essentials</h3>
+        </div>
+        <ul className="space-y-2">
+          {packageData.preparation_essentials.map((item, index) => (
+            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
+              • {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {/* Electronics */}
+    {packageData.preparation_electronics.length > 0 && (
+      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+        <div className="flex items-center space-x-3 mb-4">
+          <Camera className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+          <h3 className="text-lg font-light text-gray-900">Electronics</h3>
+        </div>
+        <ul className="space-y-2">
+          {packageData.preparation_electronics.map((item, index) => (
+            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
+              • {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</div>
+
+             
             </div>
           </div>
         </div>
