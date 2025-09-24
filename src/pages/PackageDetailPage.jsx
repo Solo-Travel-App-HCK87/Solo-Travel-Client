@@ -21,6 +21,7 @@ export default function PackageDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
   const [packageData, setPackageData] = useState({
     destination_name: '',
     location: '',
@@ -44,6 +45,7 @@ export default function PackageDetailPage() {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await http({
         url: `/packages/${id}`,
         method: 'GET',
@@ -55,6 +57,8 @@ export default function PackageDetailPage() {
       setPackageData(response.data);
     } catch (error) {
       showError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,6 +83,109 @@ export default function PackageDetailPage() {
   }, []);
 
   console.log(packageData);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="w-full">
+          <div className="grid grid-cols-12 min-h-screen">
+            {/* Left Panel - Loading Skeleton */}
+            <div className="col-span-4 bg-white border-r border-gray-100 p-12 sticky top-0 h-screen overflow-y-auto">
+              {/* Back Button Skeleton */}
+              <div className="mb-12 flex items-center">
+                <div className="w-4 h-4 bg-gray-200 rounded mr-3 animate-pulse"></div>
+                <div className="w-32 h-4 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+
+              {/* Panel Title Skeleton */}
+              <div className="mb-12">
+                <div className="w-48 h-8 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                <div className="w-12 h-px bg-gray-200 animate-pulse"></div>
+              </div>
+
+              {/* Price Section Skeleton */}
+              <div className="mb-12">
+                <div className="flex items-baseline space-x-4 mb-3">
+                  <div className="w-20 h-6 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-16 h-6 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="w-24 h-10 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div className="mt-6 pt-6 border-t border-gray-100"></div>
+              </div>
+
+              {/* What's Included Skeleton */}
+              <div className="mb-12">
+                <div className="w-32 h-4 bg-gray-200 rounded mb-6 animate-pulse"></div>
+                <div className="space-y-4">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div key={item} className="flex items-center space-x-4">
+                      <div className="w-4 h-4 bg-gray-200 rounded-sm animate-pulse"></div>
+                      <div className="w-40 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA Button Skeleton */}
+              <div className="w-full h-12 bg-gray-200 rounded mb-6 animate-pulse"></div>
+
+              {/* Urgency Message Skeleton */}
+              <div className="bg-gray-50 border border-gray-200 p-4 flex items-center space-x-3">
+                <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div className="w-32 h-4 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Right Content Area - Loading Skeleton */}
+            <div className="col-span-8 bg-gray-50">
+              {/* Hero Section Skeleton */}
+              <div className="relative h-[60vh] m-4">
+                <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl bg-gray-300 animate-pulse">
+                  {/* Loading spinner in center */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="w-12 h-12 border-4 border-gray-400 border-t-white rounded-full animate-spin"></div>
+                      <div className="text-gray-600 font-medium">Loading package details...</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Container Skeleton */}
+              <div className="p-12 space-y-16 bg-gray-50">
+                {/* Description Skeleton */}
+                <div className="space-y-4">
+                  <div className="w-full h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-5/6 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-4/5 h-4 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+
+                {/* Itinerary Skeleton */}
+                <div className="space-y-8">
+                  <div className="w-48 h-8 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((day) => (
+                      <div key={day} className="bg-white border border-gray-200 p-6 rounded-xl">
+                        <div className="flex items-start space-x-6">
+                          <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+                          <div className="flex-1 space-y-2">
+                            <div className="w-24 h-6 bg-gray-200 rounded animate-pulse"></div>
+                            <div className="w-full h-4 bg-gray-200 rounded animate-pulse"></div>
+                            <div className="w-3/4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -107,14 +214,18 @@ export default function PackageDetailPage() {
             <div className="mb-12">
               <div className="flex items-baseline space-x-4 mb-3">
                 <span className="text-gray-400 line-through text-lg font-light tracking-wide">
-                  {packageData.original_price}
+                  {packageData.original_price
+                    .toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                    .replace(/\.00$/, '')}
                 </span>
                 <span className="bg-gray-100 text-gray-700 px-3 py-1 text-xs font-medium tracking-wide uppercase">
                   Save 47%
                 </span>
               </div>
               <div className="text-4xl font-light text-gray-900 mb-2 tracking-tight">
-                {packageData.current_price}
+                {packageData.current_price
+                  .toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                  .replace(/\.00$/, '')}
               </div>
               <div className="text-gray-500 font-light tracking-wide">per person</div>
               <div className="mt-6 pt-6 border-t border-gray-100"></div>
@@ -138,11 +249,12 @@ export default function PackageDetailPage() {
             </div>
 
             {/* CTA Button */}
-            <button onClick={() => {
-
-              buyPackage()
-
-            }} className="cursor-pointer w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
+            <button
+              onClick={() => {
+                buyPackage();
+              }}
+              className="cursor-pointer w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6"
+            >
               Book Now
             </button>
 
@@ -165,71 +277,60 @@ export default function PackageDetailPage() {
                   alt="Iceland landscape"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-black/40"></div>
+
+                {/* Bottom-left Info Bar */}
+                <div className="absolute bottom-8 left-8">
+                  <div className="flex items-center space-x-8">
+                    {/* Duration */}
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-white/90" strokeWidth={1.5} />
+                      <span className="text-white text-sm font-medium drop-shadow-lg">
+                        {packageData.duration_days} Days
+                      </span>
+                    </div>
+
+                    {/* Available Slots */}
+                    <div className="flex items-center space-x-2">
+                      <Users className="w-4 h-4 text-white/90" strokeWidth={1.5} />
+                      <span className="text-white text-sm font-medium drop-shadow-lg">
+                        {packageData.available_slots} Slots Left
+                      </span>
+                    </div>
+
+                    {/* Departure Date */}
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-4 h-4 text-white/90" strokeWidth={1.5} />
+                      <span className="text-white text-sm font-medium drop-shadow-lg">
+                        {packageData.departure_date.split('T')[0]}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Location - Centered */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-white">
                     <h1
-                      className="text-6xl font-light tracking-tight mb-4"
-                      style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+                      className="text-7xl font-black tracking-tight mb-4"
+                      style={{
+                        fontFamily: 'Inter, system-ui, sans-serif',
+                        textShadow: '4px 4px 12px rgba(0,0,0,0.8), 2px 2px 8px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.4)'
+                      }}
                     >
                       {packageData.destination_name}
                     </h1>
-                    <div className="flex items-center justify-center space-x-2 opacity-90">
-                      <MapPin className="w-5 h-5" strokeWidth={1.5} />
-                      <span className="text-lg font-light tracking-wide">{packageData.destination_name}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom Content */}
-                <div className="absolute bottom-12 left-12 text-white">
-                  {/* Key Information Bar */}
-                  <div className="grid grid-cols-3 gap-8 mb-6">
-                    <div className="flex items-center space-x-3">
-                      <Clock className="w-5 h-5 text-white/80" strokeWidth={1.5} />
-                      <div>
-                        <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
-                          Duration
-                        </div>
-                        <div className="text-white font-light">{packageData.duration_days}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Users className="w-5 h-5 text-white/80" strokeWidth={1.5} />
-                      <div>
-                        <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
-                          Available
-                        </div>
-                        <div className="text-white font-light">
-                          {packageData.available_slots} slots left
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Calendar className="w-5 h-5 text-white/80" strokeWidth={1.5} />
-                      <div>
-                        <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
-                          Departure
-                        </div>
-                        <div className="text-white font-light">
-                          {packageData.departure_date.split('T')[0]}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="flex space-x-3">
-                    {packageData.highlights.map((tag, index) => (
+                    <div className="flex items-center justify-center space-x-2">
+                      <MapPin className="w-6 h-6" strokeWidth={2} style={{ filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.8))' }} />
                       <span
-                        key={index}
-                        className="border border-white/30 text-white px-4 py-2 text-sm font-light tracking-wide backdrop-blur-sm bg-white/10 rounded-lg"
+                        className="text-xl font-bold tracking-wide"
+                        style={{
+                          textShadow: '3px 3px 8px rgba(0,0,0,0.8), 1px 1px 4px rgba(0,0,0,0.6)'
+                        }}
                       >
-                        {tag}
+                        {packageData.location}
                       </span>
-                    ))}
+                    </div>
                   </div>
                 </div>
               </div>
