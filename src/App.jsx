@@ -11,6 +11,7 @@ import ChatRoomPage from './pages/ChatRoomPage';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
+import { AuthProvider } from './contexts/auth';
 import ProfilePage from './pages/ProfilePage';
 
 function RootLayout() {
@@ -29,26 +30,28 @@ function RootLayout() {
 
 function App() {
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<RootLayout />}>
-            <Route element={<AuthLayout />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+    <AuthProvider>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<RootLayout />}>
+              <Route element={<AuthLayout />}>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+              </Route>
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/packages" element={<PackagePage />} />
+              </Route>
+              <Route path="/packages/:id" element={<PackageDetailPage />} />
+              <Route path="/my-packages" element={<MyPackagesPage />} />
+              <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
             </Route>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/profile/:id" element={<ProfilePage />} />
-              <Route path="/packages" element={<PackagePage />} />
-            </Route>
-            <Route path="/packages/:id" element={<PackageDetailPage />} />
-            <Route path="/my-packages" element={<MyPackagesPage />} />
-            <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </AuthProvider>
   );
 }
 
