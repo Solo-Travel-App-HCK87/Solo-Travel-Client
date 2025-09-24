@@ -1,49 +1,48 @@
-import { useState, useEffect } from "react"
-import { useParams } from "react-router"
-import { showError } from "../helpers/alert"
-import { http } from "../helpers/http"
-
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
+import { showError } from '../helpers/alert';
+import { http } from '../helpers/http';
 
 export default function ProfilePage() {
-  const params = useParams()
+  const params = useParams();
   const [profile, setProfile] = useState({
-    firstName: "",
-    lastName: "",
-    imageUrl: ""
-  })
-  const [loading, setLoading] = useState(false)
-  const [initialLoading, setInitialLoading] = useState(true)
+    firstName: '',
+    lastName: '',
+    imageUrl: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        setInitialLoading(true)
+        setInitialLoading(true);
         const response = await http({
-          method: "GET",
+          method: 'GET',
           url: `/users/${params.id}`,
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        })
-        
-        const userData = response.data
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+
+        const userData = response.data;
         setProfile({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-          imageUrl: userData.imageUrl || ""
-        })
+          firstName: userData.firstName || '',
+          lastName: userData.lastName || '',
+          imageUrl: userData.imageUrl || '',
+        });
       } catch (error) {
-        showError(error)
+        showError(error);
       } finally {
-        setInitialLoading(false)
+        setInitialLoading(false);
       }
-    }
+    };
 
     if (params.id) {
-      fetchUserData()
+      fetchUserData();
     }
-  }, [params.id])
+  }, [params.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +56,7 @@ export default function ProfilePage() {
         showError('Please select a valid image file');
         return;
       }
-      
+
       // Validate file size (2MB limit)
       if (file.size > 2 * 1024 * 1024) {
         showError('File size must be less than 2MB');
@@ -65,65 +64,63 @@ export default function ProfilePage() {
       }
 
       try {
-        setLoading(true)
-        
+        setLoading(true);
+
         // Create FormData for file upload
-        const formData = new FormData()
-        formData.append('image', file)
+        const formData = new FormData();
+        formData.append('image', file);
 
         const response = await http({
-          method: "PATCH",
+          method: 'PATCH',
           url: `/users/${params.id}/image`,
           data: formData,
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        })
+            'Content-Type': 'multipart/form-data',
+          },
+        });
 
         // Update profile with new image URL from server response
-        setProfile({ ...profile, imageUrl: response.data.imageUrl })
-        
+        setProfile({ ...profile, imageUrl: response.data.imageUrl });
       } catch (error) {
-        showError(error)
+        showError(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      setLoading(true)
-      
+      setLoading(true);
+
       const response = await http({
-        method: "PUT",
+        method: 'PUT',
         url: `/users/${params.id}`,
         data: {
           firstName: profile.firstName,
-          lastName: profile.lastName
+          lastName: profile.lastName,
         },
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
-      })
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
 
       // Update profile with response data
-      setProfile(prevProfile => ({
+      setProfile((prevProfile) => ({
         ...prevProfile,
         firstName: response.data.firstName,
-        lastName: response.data.lastName
-      }))
+        lastName: response.data.lastName,
+      }));
 
       // Show success message or redirect
-      console.log("Profile updated successfully:", response.data)
-      
+      console.log('Profile updated successfully:', response.data);
     } catch (error) {
-      showError(error)
+      showError(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -138,7 +135,7 @@ export default function ProfilePage() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        
+
         <div className="relative z-10 flex items-center justify-center min-h-screen py-20 px-4">
           <div className="max-w-[480px] w-full">
             <div className="p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl">
@@ -150,7 +147,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -164,19 +161,19 @@ export default function ProfilePage() {
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        
+
         <div className="relative z-10 flex items-center justify-center min-h-screen py-20 px-4">
           <div className="max-w-[480px] w-full">
             <div className="p-6 sm:p-8 rounded-2xl bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl">
               <h1 className="text-slate-900 text-center text-3xl font-semibold">Profile</h1>
-              
+
               {/* Profile Picture Section */}
               <div className="mt-8 flex flex-col items-center">
                 <div className="relative">
                   {profile.imageUrl ? (
-                    <img 
-                      src={profile.imageUrl} 
-                      alt="Profile" 
+                    <img
+                      src={profile.imageUrl}
+                      alt="Profile"
                       className="w-24 h-24 rounded-full object-cover border-4 border-blue-600"
                     />
                   ) : (
@@ -187,16 +184,16 @@ export default function ProfilePage() {
                         className="w-12 h-12"
                         viewBox="0 0 24 24"
                       >
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                     </div>
                   )}
                 </div>
-                <label className={`mt-4 cursor-pointer px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  loading 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-600 hover:bg-blue-700'
-                } text-white`}>
+                <label
+                  className={`mt-4 cursor-pointer px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+                  } text-white`}
+                >
                   {loading ? 'Uploading...' : 'Upload Picture'}
                   <input
                     type="file"
@@ -210,7 +207,9 @@ export default function ProfilePage() {
 
               <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <div>
-                  <label className="text-slate-900 text-sm font-medium mb-2 block">First Name</label>
+                  <label className="text-slate-900 text-sm font-medium mb-2 block">
+                    First Name
+                  </label>
                   <div className="relative flex items-center">
                     <input
                       name="firstName"
@@ -270,9 +269,7 @@ export default function ProfilePage() {
                     type="submit"
                     disabled={loading}
                     className={`w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white focus:outline-none cursor-pointer ${
-                      loading 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-blue-600 hover:bg-blue-700'
+                      loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
                     }`}
                   >
                     {loading ? 'Updating...' : 'Update Profile'}
@@ -284,5 +281,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </>
-  )
+  );
 }
