@@ -105,7 +105,7 @@ export default function PackageDetailPage() {
             {/* Back Button */}
             <button
               onClick={() => navigate('/packages')}
-              className="mb-12 flex items-center text-gray-500 hover:text-gray-700 transition-colors group"
+              className="cursor-pointer mb-12 flex items-center text-gray-500 hover:text-gray-700 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 mr-3 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm font-medium tracking-wide">BACK TO PACKAGES</span>
@@ -158,7 +158,7 @@ export default function PackageDetailPage() {
 
               buyPackage()
 
-            }} className="w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
+            }} className="cursor-pointer w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
               Book Now
             </button>
 

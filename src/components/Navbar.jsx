@@ -2,15 +2,44 @@ import { Users, User, Package, LogOut, ChevronDown } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router';
 import { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
+import { showError } from '../helpers/alert';
+import { http } from '../helpers/http';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { profile, fetchProfile } = useContext(AuthContext);
+  const [myPackages, setMyPackages] = useState([]);
   // Close dropdown when clicking outside
+
+  
+    const fetchData = async () => {
+  
+      try {
+        
+        const response = await http({
+          url : '/my-packages',
+          method : 'GET',
+          headers : {
+            Authorization : `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+  
+        setMyPackages(response.data)
+  
+      } catch (error) {
+        
+        showError(error)
+        console.log(error, '<<< nav')
+  
+      }
+  
+    }
+
   useEffect(() => {
     fetchProfile();
+    fetchData();
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
@@ -22,7 +51,7 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  // console.log(profile);
+  console.log(myPackages, '<< nav mypackages');
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 w-full">
@@ -128,7 +157,7 @@ export default function Navbar() {
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
                         <div className="font-medium">My Packages</div>
-                        <div className="text-xs text-gray-500">2 active bookings</div>
+                        <div className="text-xs text-gray-500">{myPackages.length ? `${myPackages.length} active bookings` : 'No active bookings'}</div>
                       </div>
                     </button>
 

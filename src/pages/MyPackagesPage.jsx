@@ -47,7 +47,7 @@ export default function MyPackagesPage() {
             {/* Back Button */}
             <button
               onClick={() => navigate('/')}
-              className="mb-12 flex items-center text-gray-500 hover:text-gray-700 transition-colors group"
+              className="cursor-pointer mb-12 flex items-center text-gray-500 hover:text-gray-700 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 mr-3 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm font-medium tracking-wide">BACK TO HOME</span>
@@ -77,7 +77,7 @@ export default function MyPackagesPage() {
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/packages')}
-                className="w-full bg-gray-900 text-white py-3 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors"
+                className="cursor-pointer w-full bg-gray-900 text-white py-3 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors"
               >
                 Browse New Packages
               </button>
@@ -197,13 +197,13 @@ export default function MyPackagesPage() {
                           <div className="flex space-x-3 pt-2">
                             <button
                               onClick={() => navigate(`/packages/${booking.TravelPackage.id}`)}
-                              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                              className="cursor-pointer px-4 py-2 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
                             >
                               View Details
                             </button>
                             <button
                               onClick={() => navigate(`/chat/room/${booking.TravelPackage.id}`)}
-                              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                              className="cursor-pointer px-4 py-2 bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
                             >
                               Chat Room
                             </button>

@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 
 export const showError = (err) => {
   let message = "Oops, something went wrong!"
-  if (err) {
+  if (err.response) {
     message = err.response.data.message
   }
 
