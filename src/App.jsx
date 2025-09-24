@@ -1,18 +1,12 @@
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router';
-import HomePage from './pages/HomePage';
-import { MainLayout } from './layouts/MainLayout';
-import PackagePage from './pages/PackagePage';
+import { MainRoute } from './layouts/MainLayout';
 import AuthLayout from './layouts/AuthLayout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import PackageDetailPage from './pages/PackageDetailPage';
-import MyPackagesPage from './pages/MyPackagesPage';
-import ChatRoomPage from './pages/ChatRoomPage';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
 import { AuthProvider } from './contexts/auth';
-import ProfilePage from './pages/ProfilePage';
 
 function RootLayout() {
   const location = useLocation();
@@ -39,14 +33,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
               </Route>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/packages" element={<PackagePage />} />
-              </Route>
-              <Route path="/packages/:id" element={<PackageDetailPage />} />
-              <Route path="/my-packages" element={<MyPackagesPage />} />
-              <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
+              <Route path="*" element={<MainRoute />} />
             </Route>
           </Routes>
         </BrowserRouter>
