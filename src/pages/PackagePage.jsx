@@ -1,87 +1,94 @@
 import { MapPin } from 'lucide-react';
 import PackageCard from '../components/PackageCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { fetchPackages } from '../store/packageSlice';
+import { useSearchParams } from 'react-router';
 
 export default function PackagePage() {
-  const packages = [
-    {
-      destination: 'Bali, Indonesia',
-      image: 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&h=300&fit=crop',
-      duration: '7 Days',
-      price: '$899',
-      originalPrice: '$1,299',
-      includes: [
-        'Flight',
-        'Accommodation',
-        'Daily breakfast',
-        'Random travel buddy',
-        'Local guide',
-      ],
-      availableSlots: 12,
-      nextDeparture: 'Dec 15, 2025',
-      tags: ['Beach', 'Culture', 'Adventure'],
-    },
-    {
-      destination: 'Tokyo, Japan',
-      image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop',
-      duration: '8 Days',
-      price: '$1,299',
-      originalPrice: '$1,899',
-      includes: ['Flight', 'Hotel', 'JR Pass', 'Random travel buddy', 'City tours'],
-      availableSlots: 8,
-      nextDeparture: 'Jan 10, 2026',
-      tags: ['Culture', 'Food', 'Technology'],
-    },
-    {
-      destination: 'Paris, France',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '6 Days',
-      price: '$1,099',
-      originalPrice: '$1,599',
-      includes: ['Flight', 'Hotel', 'Museum passes', 'Random travel buddy', 'Seine cruise'],
-      availableSlots: 15,
-      nextDeparture: 'Dec 20, 2025',
-      tags: ['Romance', 'Art', 'History'],
-    },
-    {
-      destination: 'Iceland',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '9 Days',
-      price: '$1,599',
-      originalPrice: '$2,299',
-      includes: [
-        'Flight',
-        'Accommodation',
-        'Car rental',
-        'Random travel buddy',
-        'Northern lights tour',
-      ],
-      availableSlots: 6,
-      nextDeparture: 'Feb 1, 2026',
-      tags: ['Nature', 'Adventure', 'Photography'],
-    },
-    {
-      destination: 'Thailand',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      duration: '10 Days',
-      price: '$699',
-      originalPrice: '$999',
-      includes: ['Flight', 'Hotels', 'Island hopping', 'Random travel buddy', 'Cooking class'],
-      availableSlots: 20,
-      nextDeparture: 'Dec 18, 2025',
-      tags: ['Beach', 'Food', 'Budget'],
-    },
-    {
-      destination: 'Morocco',
-      image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=400&h=300&fit=crop',
-      duration: '8 Days',
-      price: '$999',
-      originalPrice: '$1,399',
-      includes: ['Flight', 'Riads', 'Desert safari', 'Random travel buddy', 'Marrakech tour'],
-      availableSlots: 4,
-      nextDeparture: 'Mar 5, 2026',
-      tags: ['Culture', 'Adventure', 'Markets'],
-    },
-  ];
+  const { packages } = useSelector((state) => state.package);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchDestination, setSearchDestination] = useState(searchParams.get('search') || '');
+  const [sortOption, setSortOption] = useState(searchParams.get('sort') || '');
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const initialSearch = searchParams.get('search');
+    const initialSort = searchParams.get('sort');
+    const params = {};
+    
+    if (initialSearch) {
+      params.search = initialSearch;
+    }
+    
+    if (initialSort) {
+      params.sort = initialSort;
+    }
+    
+    dispatch(fetchPackages(params));
+  }, [dispatch, searchParams]);
+
+  const handleSearch = () => {
+    const params = {};
+    
+    if (searchDestination.trim()) {
+      params.search = searchDestination.trim();
+    }
+    
+    if (sortOption) {
+      params.sort = sortOption;
+    }
+    
+    dispatch(fetchPackages(params));
+    
+    // Update URL params
+    const newSearchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      newSearchParams.append('search', searchDestination.trim());
+    }
+    if (sortOption) {
+      newSearchParams.append('sort', sortOption);
+    }
+    setSearchParams(newSearchParams);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSortChange = (e) => {
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    
+    // Auto search ketika sort berubah
+    const params = {};
+    
+    if (searchDestination.trim()) {
+      params.search = searchDestination.trim();
+    }
+    
+    if (newSortOption) {
+      params.sort = newSortOption;
+    }
+    
+    console.log('Sort params being sent:', params); // Debug log
+    dispatch(fetchPackages(params));
+    
+    // Update URL params
+    const newSearchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      newSearchParams.append('search', searchDestination.trim());
+    }
+    if (newSortOption) {
+      newSearchParams.append('sort', newSortOption);
+    }
+    setSearchParams(newSearchParams);
+  };
+
+  console.log(packages)
 
   return (
     <div className="min-h-screen">
@@ -92,16 +99,16 @@ export default function PackagePage() {
         }}
       >
         <div className="bg-black/30">
-          <section className="pt-32 pb-23 text-white">
-            <div className="max-w-7xl mx-auto px-6 text-center">
+          <section className="pt-20 sm:pt-24 md:pt-32 pb-16 sm:pb-20 md:pb-23 text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
               <h1
-                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
                 style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: '700' }}
               >
                 Discover Amazing Packages
               </h1>
               <p
-                className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto font-medium opacity-90"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto font-medium opacity-90 px-2"
                 style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
               >
                 Choose your destination and find your perfect travel companion
@@ -111,29 +118,44 @@ export default function PackagePage() {
         </div>
       </div>
 
-      <div className="relative z-30 -mt-16" style={{ transform: 'translateY(-20px)' }}>
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="bg-white rounded-2xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-4 border-white/20">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200">
-                <MapPin className="w-5 h-5 mr-3 text-gray-500" />
+      <div className="relative z-30 -mt-8 sm:-mt-12 md:-mt-16" style={{ transform: 'translateY(-20px)' }}>
+        <div className="max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-2 sm:border-4 border-white/20">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex items-center bg-white rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 flex-1 min-w-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-gray-500 flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Search destination"
-                  className="flex-1 outline-none text-gray-700 bg-transparent"
+                  value={searchDestination}
+                  onChange={(e) => setSearchDestination(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1 outline-none text-gray-700 bg-transparent text-sm sm:text-base min-w-0"
                 />
               </div>
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200">
-                <span className="text-gray-500 mr-3">💰</span>
-                <select className="flex-1 outline-none text-gray-700 bg-transparent">
-                  <option>All Budgets</option>
-                  <option>$500 - $1000</option>
-                  <option>$1000 - $2000</option>
-                  <option>$2000+</option>
+              <div className="flex items-center bg-white rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 relative flex-1 min-w-0">
+                <span className="text-gray-500 mr-2 sm:mr-3 text-sm sm:text-base flex-shrink-0">💰</span>
+                <select
+                  value={sortOption}
+                  onChange={handleSortChange}
+                  className="flex-1 outline-none text-gray-700 bg-transparent appearance-none cursor-pointer pr-5 sm:pr-6 text-sm sm:text-base min-w-0"
+                >
+                  <option value="">Sort by Price</option>
+                  <option value="ASC">Price: Low to High</option>
+                  <option value="DESC">Price: High to Low</option>
                 </select>
+                <div className="absolute right-2 sm:right-3 pointer-events-none">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
-              <button className="bg-gray-800 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 transition-colors">
-                Search Packages
+              <button
+                onClick={handleSearch}
+                className="cursor-pointer bg-gray-800 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm hover:bg-gray-900 transition-colors whitespace-nowrap"
+              >
+                <span className="hidden sm:inline">Search Packages</span>
+                <span className="sm:hidden">Search</span>
               </button>
             </div>
           </div>
@@ -141,16 +163,16 @@ export default function PackagePage() {
       </div>
 
       <section
-        className="relative -mt-18 pt-48 pb-32 z-20 min-h-screen"
+        className="relative -mt-12 sm:-mt-16 md:-mt-18 pt-24 sm:pt-32 md:pt-40 lg:pt-48 pb-16 sm:pb-24 md:pb-32 z-20 min-h-screen"
         style={{
           backgroundColor: '#F8F9FA',
-          borderTopLeftRadius: '32px',
-          borderTopRightRadius: '32px',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
           boxShadow: '0 -10px 30px rgba(0,0,0,0.1), 0 4px 20px rgba(0,0,0,0.05)',
         }}
       >
-        <div className="px-20">
-          <div className="grid md:grid-cols-4 lg:grid-cols-4 gap-5 mb-16">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-12 md:mb-16">
             {packages.map((pkg, index) => (
               <PackageCard key={index} package={pkg} />
             ))}

@@ -1,1 +1,51 @@
 @import 'tailwindcss';
+
+/* Custom responsive styles for mobile landscape and better mobile experience */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .mobile-landscape-fix {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .mobile-landscape-fix h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-landscape-fix p {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .mobile-landscape-stats {
+    margin-top: 1rem;
+  }
+}
+
+/* Smooth transitions for better UX */
+@media (prefers-reduced-motion: no-preference) {
+  .search-container {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .search-container:focus-within {
+    transform: translateY(-2px);
+  }
+}
+
+/* Better focus states for accessibility */
+.search-input:focus,
+.search-select:focus,
+.search-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Improved mobile touch targets */
+@media (max-width: 640px) {
+  button,
+  select,
+  input {
+    min-height: 44px;
+  }
+}
