@@ -121,8 +121,8 @@ export default function PackagePage() {
       <div className="relative z-30 -mt-16" style={{ transform: 'translateY(-20px)' }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="bg-white rounded-2xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-4 border-white/20">
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 flex-1">
                 <MapPin className="w-5 h-5 mr-3 text-gray-500" />
                 <input
                   type="text"
@@ -133,7 +133,7 @@ export default function PackagePage() {
                   className="flex-1 outline-none text-gray-700 bg-transparent"
                 />
               </div>
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 relative">
+              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 relative flex-1">
                 <span className="text-gray-500 mr-3">💰</span>
                 <select 
                   value={sortOption} 
@@ -152,7 +152,7 @@ export default function PackagePage() {
               </div>
               <button 
                 onClick={handleSearch}
-                className="cursor-pointer bg-gray-800 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 transition-colors md:col-span-2"
+                className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-xl font-medium text-sm hover:bg-gray-900 transition-colors whitespace-nowrap"
               >
                 Search Packages
               </button>

@@ -2,15 +2,44 @@ import { Users, User, Package, LogOut, ChevronDown } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router';
 import { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
+import { showError } from '../helpers/alert';
+import { http } from '../helpers/http';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { profile, fetchProfile } = useContext(AuthContext);
+  const [myPackages, setMyPackages] = useState([]);
   // Close dropdown when clicking outside
+
+  
+    const fetchData = async () => {
+  
+      try {
+        
+        const response = await http({
+          url : '/my-packages',
+          method : 'GET',
+          headers : {
+            Authorization : `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+  
+        setMyPackages(response.data)
+  
+      } catch (error) {
+        
+        showError(error)
+        console.log(error, '<<< nav')
+  
+      }
+  
+    }
+
   useEffect(() => {
     fetchProfile();
+    fetchData();
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
@@ -22,7 +51,7 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  // console.log(profile);
+  console.log(myPackages, '<< nav mypackages');
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 w-full">
@@ -72,7 +101,7 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-2 text-white hover:text-blue-200 transition-colors font-medium text-sm bg-white/15 backdrop-blur-sm rounded-full px-4 py-2"
+                className="cursor-pointer flex items-center space-x-2 text-white hover:text-blue-200 transition-colors font-medium text-sm bg-white/15 backdrop-blur-sm rounded-full px-4 py-2"
               >
                 <Users className="w-4 h-4" />
                 <span>Profile</span>
@@ -110,12 +139,10 @@ export default function Navbar() {
 
                   {/* Menu Items */}
                   <div className="py-2">
-                    <button
-                      onClick={() => {
-                        navigate('/profile');
-                      }}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
-                    >
+                    <button onClick={() => {
+                      navigate('/profile')
+
+                    }} className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
                       <User className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">Profile Details</span>
                     </button>
@@ -125,12 +152,12 @@ export default function Navbar() {
                         navigate('/my-packages');
                         setIsProfileOpen(false);
                       }}
-                      className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
+                      className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
                     >
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
                         <div className="font-medium">My Packages</div>
-                        <div className="text-xs text-gray-500">2 active bookings</div>
+                        <div className="text-xs text-gray-500">{myPackages.length ? `${myPackages.length} active bookings` : 'No active bookings'}</div>
                       </div>
                     </button>
 
@@ -140,7 +167,7 @@ export default function Navbar() {
                           localStorage.removeItem(`access_token`);
                           navigate(`/login`);
                         }}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors"
+                        className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50/50 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         <span className="font-medium">Logout</span>

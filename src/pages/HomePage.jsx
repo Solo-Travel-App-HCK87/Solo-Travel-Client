@@ -6,6 +6,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [searchDestination, setSearchDestination] = useState('');
   const [sortOption, setSortOption] = useState('');
+  
 
   const handleSearch = () => {
     const searchParams = new URLSearchParams();
@@ -83,7 +84,7 @@ export default function HomePage() {
                 <select 
                   value={sortOption} 
                   onChange={handleSortChange}
-                  className="flex-1 outline-none text-gray-700 text-base bg-transparent appearance-none cursor-pointer pr-8"
+                  className="cursor-pointer flex-1 outline-none text-gray-700 text-base bg-transparent appearance-none cursor-pointer pr-8"
                 >
                   <option value="">Sort by Price</option>
                   <option value="ASC">Price: Low to High</option>
