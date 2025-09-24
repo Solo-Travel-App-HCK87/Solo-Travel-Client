@@ -18,7 +18,6 @@ import { http } from '../helpers/http';
 import { showError } from '../helpers/alert';
 
 export default function PackageDetailPage() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -40,61 +39,46 @@ export default function PackageDetailPage() {
     preparation_clothing: [],
     preparation_essentials: [],
     preparation_electronics: [],
-    highlights: []
-  })
+    highlights: [],
+  });
 
   const fetchData = async () => {
-
     try {
-      
       const response = await http({
-        url : `/packages/${id}`,
-        method : 'GET',
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem('access_token')}`
-        }
-      })
-
-      setPackageData(response.data)
-
-    } catch (error) {
-      
-      showError(error);
-
-    }
-
-  }
-
-  const buyPackage = async () => {
-
-    try {
-      
-      const response = await http({
-        url : `/buys/${id}`,
-        method : 'POST',
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem('access_token')}`
-        }
+        url: `/packages/${id}`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
       });
 
-      navigate('/my-packages')
-
+      setPackageData(response.data);
     } catch (error) {
-      
-      showError(error)
-
+      showError(error);
     }
+  };
 
-  }
+  const buyPackage = async () => {
+    try {
+      const response = await http({
+        url: `/buys/${id}`,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
 
+      navigate('/my-packages');
+    } catch (error) {
+      showError(error);
+    }
+  };
 
   useEffect(() => {
-
     fetchData();
+  }, []);
 
-  }, [])
-
-  console.log(packageData)
+  console.log(packageData);
 
   return (
     <div className="min-h-screen bg-white">
@@ -154,11 +138,12 @@ export default function PackageDetailPage() {
             </div>
 
             {/* CTA Button */}
-            <button onClick={() => {
-
-              buyPackage()
-
-            }} className="w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6">
+            <button
+              onClick={() => {
+                buyPackage();
+              }}
+              className="w-full bg-gray-900 text-white py-4 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors mb-6"
+            >
               Book Now
             </button>
 
@@ -229,7 +214,9 @@ export default function PackageDetailPage() {
                         <div className="text-xs text-white/70 uppercase tracking-wider font-medium mb-1">
                           Departure
                         </div>
-                        <div className="text-white font-light">{packageData.departure_date.split('T')[0]}</div>
+                        <div className="text-white font-light">
+                          {packageData.departure_date.split('T')[0]}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -262,33 +249,33 @@ export default function PackageDetailPage() {
               </div>
 
               {/* Day by Day Itinerary */}
-<div className="space-y-8">
-  <h2 className="text-2xl font-light text-gray-900 tracking-wide">
-    Day by Day Itinerary
-  </h2>
-  <div className="space-y-4">
-    {packageData.itinerary.map((dayItem, index) => (
-      <div
-        key={index}
-        className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg"
-      >
-        <div className="flex items-start space-x-6">
-          <div className="w-8 h-8 border border-gray-300 flex items-center justify-center text-sm font-light text-gray-600 flex-shrink-0">
-            {dayItem.day}
-          </div>
-          <div>
-            <h3 className="text-gray-900 font-light tracking-wide mb-2">
-              Day {dayItem.day}
-            </h3>
-            <p className="text-gray-600 font-light leading-relaxed">
-              {dayItem.activity}
-            </p>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+              <div className="space-y-8">
+                <h2 className="text-2xl font-light text-gray-900 tracking-wide">
+                  Day by Day Itinerary
+                </h2>
+                <div className="space-y-4">
+                  {packageData.itinerary.map((dayItem, index) => (
+                    <div
+                      key={index}
+                      className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg"
+                    >
+                      <div className="flex items-start space-x-6">
+                        <div className="w-8 h-8 border border-gray-300 flex items-center justify-center text-sm font-light text-gray-600 flex-shrink-0">
+                          {dayItem.day}
+                        </div>
+                        <div>
+                          <h3 className="text-gray-900 font-light tracking-wide mb-2">
+                            Day {dayItem.day}
+                          </h3>
+                          <p className="text-gray-600 font-light leading-relaxed">
+                            {dayItem.activity}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Package Highlights */}
               <div className="space-y-8">
@@ -313,83 +300,91 @@ export default function PackageDetailPage() {
               </div>
 
               {/* Package Highlights */}
-{/* TAMBAHKAN INI - What to Prepare */}
-<div className="space-y-8">
-  <h2 className="text-2xl font-light text-gray-900 tracking-wide">
-    What to Prepare
-  </h2>
-  <div className="grid grid-cols-2 gap-8">
-    {/* Documents */}
-    {packageData.preparation_docs.length > 0 && (
-      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
-        <div className="flex items-center space-x-3 mb-4">
-          <FileText className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
-          <h3 className="text-lg font-light text-gray-900">Documents</h3>
-        </div>
-        <ul className="space-y-2">
-          {packageData.preparation_docs.map((item, index) => (
-            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
-              • {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+              {/* TAMBAHKAN INI - What to Prepare */}
+              <div className="space-y-8">
+                <h2 className="text-2xl font-light text-gray-900 tracking-wide">What to Prepare</h2>
+                <div className="grid grid-cols-2 gap-8">
+                  {/* Documents */}
+                  {packageData.preparation_docs.length > 0 && (
+                    <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <FileText className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                        <h3 className="text-lg font-light text-gray-900">Documents</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {packageData.preparation_docs.map((item, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-light text-sm leading-relaxed"
+                          >
+                            • {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-    {/* Clothing */}
-    {packageData.preparation_clothing.length > 0 && (
-      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
-        <div className="flex items-center space-x-3 mb-4">
-          <Shirt className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
-          <h3 className="text-lg font-light text-gray-900">Clothing</h3>
-        </div>
-        <ul className="space-y-2">
-          {packageData.preparation_clothing.map((item, index) => (
-            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
-              • {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+                  {/* Clothing */}
+                  {packageData.preparation_clothing.length > 0 && (
+                    <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <Shirt className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                        <h3 className="text-lg font-light text-gray-900">Clothing</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {packageData.preparation_clothing.map((item, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-light text-sm leading-relaxed"
+                          >
+                            • {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-    {/* Essentials */}
-    {packageData.preparation_essentials.length > 0 && (
-      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
-        <div className="flex items-center space-x-3 mb-4">
-          <Backpack className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
-          <h3 className="text-lg font-light text-gray-900">Essentials</h3>
-        </div>
-        <ul className="space-y-2">
-          {packageData.preparation_essentials.map((item, index) => (
-            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
-              • {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+                  {/* Essentials */}
+                  {packageData.preparation_essentials.length > 0 && (
+                    <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <Backpack className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                        <h3 className="text-lg font-light text-gray-900">Essentials</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {packageData.preparation_essentials.map((item, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-light text-sm leading-relaxed"
+                          >
+                            • {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-    {/* Electronics */}
-    {packageData.preparation_electronics.length > 0 && (
-      <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
-        <div className="flex items-center space-x-3 mb-4">
-          <Camera className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
-          <h3 className="text-lg font-light text-gray-900">Electronics</h3>
-        </div>
-        <ul className="space-y-2">
-          {packageData.preparation_electronics.map((item, index) => (
-            <li key={index} className="text-gray-600 font-light text-sm leading-relaxed">
-              • {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
-</div>
-
-             
+                  {/* Electronics */}
+                  {packageData.preparation_electronics.length > 0 && (
+                    <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <Camera className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                        <h3 className="text-lg font-light text-gray-900">Electronics</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {packageData.preparation_electronics.map((item, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-light text-sm leading-relaxed"
+                          >
+                            • {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
