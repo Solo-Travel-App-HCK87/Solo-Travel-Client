@@ -175,11 +175,11 @@ export default function PackageDetailPage() {
                       className="text-6xl font-light tracking-tight mb-4"
                       style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
                     >
-                      Iceland
+                      {packageData.destination_name}
                     </h1>
                     <div className="flex items-center justify-center space-x-2 opacity-90">
                       <MapPin className="w-5 h-5" strokeWidth={1.5} />
-                      <span className="text-lg font-light tracking-wide">Iceland</span>
+                      <span className="text-lg font-light tracking-wide">{packageData.destination_name}</span>
                     </div>
                   </div>
                 </div>
