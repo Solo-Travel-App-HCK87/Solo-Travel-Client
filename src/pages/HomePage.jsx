@@ -1,8 +1,43 @@
 import { MapPin, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [searchDestination, setSearchDestination] = useState('');
+  const [sortOption, setSortOption] = useState('');
+
+  const handleSearch = () => {
+    const searchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      searchParams.append('search', searchDestination.trim());
+    }
+    if (sortOption) {
+      searchParams.append('sort', sortOption);
+    }
+    navigate(`/packages${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSortChange = (e) => {
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    // Auto navigate ketika sort dipilih
+    const searchParams = new URLSearchParams();
+    if (searchDestination.trim()) {
+      searchParams.append('search', searchDestination.trim());
+    }
+    if (newSortOption) {
+      searchParams.append('sort', newSortOption);
+    }
+    console.log('HomePage navigating with params:', searchParams.toString()); // Debug log
+    navigate(`/packages${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
+  };
   return (
     <div className="h-screen overflow-hidden relative">
       <div
@@ -36,34 +71,30 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Destination"
+                  value={searchDestination}
+                  onChange={(e) => setSearchDestination(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="flex-1 outline-none text-gray-700 text-base"
                 />
               </div>
 
-              <div className="flex items-center bg-white rounded-full px-6 py-4 flex-1">
+              <div className="flex items-center bg-white rounded-full px-6 py-4 flex-1 relative">
                 <span className="text-gray-500 mr-4 text-lg">💰</span>
-                <select className="flex-1 outline-none text-gray-700 text-base bg-transparent">
-                  <option>Budget</option>
-                  <option>$500 - $1000</option>
-                  <option>$1000 - $2000</option>
-                  <option>$2000 - $5000</option>
-                  <option>$5000+</option>
+                <select 
+                  value={sortOption} 
+                  onChange={handleSortChange}
+                  className="flex-1 outline-none text-gray-700 text-base bg-transparent appearance-none cursor-pointer pr-8"
+                >
+                  <option value="">Sort by Price</option>
+                  <option value="ASC">Price: Low to High</option>
+                  <option value="DESC">Price: High to Low</option>
                 </select>
+                <div className="absolute right-4 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
-
-              <div className="flex items-center bg-white rounded-full px-6 py-4 flex-1">
-                <Calendar className="w-5 h-5 mr-4 text-gray-500" />
-                <input type="date" className="flex-1 outline-none text-gray-700 text-base" />
-              </div>
-
-              <button
-                onClick={() => {
-                  navigate('/packages');
-                }}
-                className="bg-blue-500 text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-blue-600 transition-colors"
-              >
-                Search
-              </button>
             </div>
           </div>
         </div>
