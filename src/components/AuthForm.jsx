@@ -65,6 +65,39 @@ export default function AuthForm(props) {
                 handleSubmit(form);
               }}
             >
+              {type === 'Register' && (
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="text-gray-700 text-sm font-medium mb-2 block">
+                      First Name
+                    </label>
+                    <input
+                      name="firstName"
+                      onChange={handleChange}
+                      value={form.firstName}
+                      type="text"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
+                      placeholder="Enter first name"
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <label className="text-gray-700 text-sm font-medium mb-2 block">
+                      Last Name
+                    </label>
+                    <input
+                      name="lastName"
+                      onChange={handleChange}
+                      value={form.lastName}
+                      type="text"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
+                      placeholder="Enter last name"
+                    />
+                  </div>
+                </div>
+              )}
               <div>
                 <label className="text-gray-900 text-sm font-bold mb-2 block">Email</label>
                 <input
@@ -118,39 +151,6 @@ export default function AuthForm(props) {
                 </div>
               </div>
 
-              {type === 'Register' && (
-                <>
-                  <div>
-                    <label className="text-gray-700 text-sm font-medium mb-2 block">
-                      First Name
-                    </label>
-                    <input
-                      name="firstName"
-                      onChange={handleChange}
-                      value={form.firstName}
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
-                      placeholder="Enter first name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-gray-700 text-sm font-medium mb-2 block">
-                      Last Name
-                    </label>
-                    <input
-                      name="lastName"
-                      onChange={handleChange}
-                      value={form.lastName}
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
-                      placeholder="Enter last name"
-                    />
-                  </div>
-                </>
-              )}
               {type === 'Log In' && (
                 <div className="flex items-center justify-between text-sm mb-6">
                   <div className="flex items-center">
