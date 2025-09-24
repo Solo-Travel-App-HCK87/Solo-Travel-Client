@@ -41,20 +41,13 @@ function App() {
               </Route>
               <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/packages" element={<PackagePage />} />
               </Route>
               <Route path="/packages/:id" element={<PackageDetailPage />} />
               <Route path="/my-packages" element={<MyPackagesPage />} />
               <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
             </Route>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/profile/:id" element={<ProfilePage />} />
-              <Route path="/packages" element={<PackagePage />} />
-            </Route>
-            <Route path="/packages/:id" element={<PackageDetailPage />} />
-            <Route path="/my-packages" element={<MyPackagesPage />} />
-            <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
           </Routes>
         </BrowserRouter>
       </Provider>
