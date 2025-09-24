@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
 import { AuthProvider } from './contexts/auth';
+import ProfilePage from './pages/ProfilePage';
 
 function RootLayout() {
   const location = useLocation();
@@ -46,6 +47,14 @@ function App() {
               <Route path="/my-packages" element={<MyPackagesPage />} />
               <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
             </Route>
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/profile/:id" element={<ProfilePage />} />
+              <Route path="/packages" element={<PackagePage />} />
+            </Route>
+            <Route path="/packages/:id" element={<PackageDetailPage />} />
+            <Route path="/my-packages" element={<MyPackagesPage />} />
+            <Route path="/chat/room/:packageId" element={<ChatRoomPage />} />
           </Routes>
         </BrowserRouter>
       </Provider>
