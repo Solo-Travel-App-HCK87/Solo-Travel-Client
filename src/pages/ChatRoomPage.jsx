@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router';
 import { format } from 'date-fns';
 import socket from '../libs/socket';
 import { AuthContext } from '../contexts/auth';
+import { showError } from '../helpers/alert';
+import { http } from '../helpers/http';
 
 export default function ChatRoomPage() {
   const navigate = useNavigate();
@@ -11,12 +13,33 @@ export default function ChatRoomPage() {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const { profile, fetchProfile } = useContext(AuthContext);
+  const [packageData, setPackageData] = useState({});
+
+  const params = useParams();
+  const fetchData = async () => {
+    try {
+      const response = await http({
+        url: `/packages/${params.packageId}`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      setPackageData(response.data);
+    } catch (error) {
+      console.log(error);
+
+      showError(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     fetchProfile();
   }, []);
-
-  const params = useParams();
 
   useEffect(() => {
     socket.auth = {
@@ -43,83 +66,7 @@ export default function ChatRoomPage() {
     };
   }, []);
 
-  console.log(users);
-
   const messagesEndRef = useRef(null);
-
-  const packageInfo = {
-    1: { name: 'Iceland Adventure', participants: 12, departure: 'Feb 1, 2026' },
-    2: { name: 'Bali Experience', participants: 8, departure: 'Jan 15, 2026' },
-  };
-
-  const currentPackage = packageInfo[packageId] || packageInfo[1];
-
-  const participants = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      avatar:
-        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
-      isOnline: true,
-      lastSeen: null,
-    },
-    {
-      id: 2,
-      name: 'Mike Chen',
-      avatar:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-      isOnline: true,
-      lastSeen: null,
-    },
-    {
-      id: 3,
-      name: 'You (Gerry)',
-      avatar:
-        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
-      isOnline: true,
-      lastSeen: null,
-    },
-    {
-      id: 4,
-      name: 'Emma Wilson',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
-      isOnline: false,
-      lastSeen: '2 hours ago',
-    },
-    {
-      id: 5,
-      name: 'Alex Rodriguez',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
-      isOnline: true,
-      lastSeen: null,
-    },
-    {
-      id: 6,
-      name: 'Lisa Park',
-      avatar:
-        'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=40&h=40&fit=crop&crop=face',
-      isOnline: false,
-      lastSeen: '1 day ago',
-    },
-    {
-      id: 7,
-      name: 'David Kim',
-      avatar:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face',
-      isOnline: false,
-      lastSeen: '3 hours ago',
-    },
-    {
-      id: 8,
-      name: 'Maria Garcia',
-      avatar:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&h=40&fit=crop&crop=face',
-      isOnline: true,
-      lastSeen: null,
-    },
-  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -128,6 +75,8 @@ export default function ChatRoomPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  console.log(packageData.Transactions, '<<< package data');
+  console.log(users, '<<< users');
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex">
@@ -145,7 +94,8 @@ export default function ChatRoomPage() {
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Trip Participants</h3>
           <div className="text-sm text-gray-500">
-            {participants.filter((p) => p.isOnline).length} of {participants.length} online
+            {users.length} of {packageData.Transactions ? packageData.Transactions.length : 0}{' '}
+            online
           </div>
         </div>
 
@@ -154,27 +104,38 @@ export default function ChatRoomPage() {
           {/* Online Participants */}
           <div className="p-4">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
-              Online ({participants.filter((p) => p.isOnline).length})
+              Online (
+              {packageData.Transactions
+                ? packageData.Transactions.filter((participant) =>
+                    users.some((user) => user.userId === participant.User.id)
+                  ).length
+                : 0}
+              )
             </div>
             <div className="space-y-3">
-              {participants
-                .filter((p) => p.isOnline)
-                .map((participant) => (
+              {packageData.Transactions &&
+                packageData.Transactions.filter((participant) =>
+                  users.some((user) => user.userId === participant.User.id)
+                ).map((participant) => (
                   <div
                     key={participant.id}
                     className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <div className="relative">
                       <img
-                        src={participant.avatar}
-                        alt={participant.name}
+                        src={
+                          participant.User.ImageUrl
+                            ? participant.User.ImageUrl
+                            : 'https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78='
+                        }
+                        alt="participant.User.firstName"
                         className="w-10 h-10 rounded-full"
                       />
                       <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-900 truncate">
-                        {participant.name}
+                        {participant.User.firstName}
                       </div>
                       <div className="text-xs text-green-600">Online</div>
                     </div>
@@ -186,29 +147,40 @@ export default function ChatRoomPage() {
           {/* Offline Participants */}
           <div className="p-4 border-t border-gray-100">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
-              Offline ({participants.filter((p) => !p.isOnline).length})
+              Offline (
+              {packageData.Transactions
+                ? packageData.Transactions.filter(
+                    (participant) => !users.some((user) => user.userId === participant.User.id)
+                  ).length
+                : 0}
+              )
             </div>
             <div className="space-y-3">
-              {participants
-                .filter((p) => !p.isOnline)
-                .map((participant) => (
+              {packageData.Transactions &&
+                packageData.Transactions.filter(
+                  (participant) => !users.some((user) => user.userId === participant.User.id)
+                ).map((participant) => (
                   <div
                     key={participant.id}
                     className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <div className="relative">
                       <img
-                        src={participant.avatar}
-                        alt={participant.name}
+                        src={
+                          participant.User.ImageUrl
+                            ? participant.User.ImageUrl
+                            : 'https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78='
+                        }
+                        alt="participant.User.firstName"
                         className="w-10 h-10 rounded-full opacity-75"
                       />
                       <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gray-400 border-2 border-white rounded-full"></div>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-900 truncate">
-                        {participant.name}
+                        {participant.User.firstName}
                       </div>
-                      <div className="text-xs text-gray-500">Last seen {participant.lastSeen}</div>
+                      <div className="text-xs text-gray-500">Offline</div>
                     </div>
                   </div>
                 ))}
@@ -224,22 +196,29 @@ export default function ChatRoomPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-semibold text-gray-900">
-                {currentPackage.name} Group Chat
+                {packageData.location} Group Chat
               </h1>
               <div className="flex items-center space-x-4 text-sm text-gray-500">
                 <div className="flex items-center space-x-1">
                   <Users className="w-4 h-4" />
-                  <span>{currentPackage.participants} participants</span>
+                  <span>
+                    {packageData.Transactions ? packageData.Transactions.length : 0} participants
+                  </span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <MapPin className="w-4 h-4" />
-                  <span>Departure: {currentPackage.departure}</span>
+                  <span>
+                    Departure:{' '}
+                    {packageData.departure_date
+                      ? new Date(packageData.departure_date).toISOString().split('T')[0]
+                      : 'N/A'}
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="text-sm text-gray-500">
+            {/* <div className="text-sm text-gray-500">
               Online: {participants.filter((p) => p.isOnline).length}
-            </div>
+            </div> */}
           </div>
         </div>
 
