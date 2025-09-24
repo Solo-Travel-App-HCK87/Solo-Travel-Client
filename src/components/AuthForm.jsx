@@ -16,9 +16,9 @@ export default function AuthForm(props) {
   };
   return (
     <>
-      <div className="h-screen flex overflow-hidden">
+      <div className="min-h-screen flex flex-col lg:flex-row overflow-hidden">
         {/* Left side - Image */}
-        <div className="hidden lg:block lg:w-1/2 relative rounded-3xl m-1 overflow-hidden">
+        <div className="hidden md:block lg:w-1/2 md:h-64 lg:h-auto relative rounded-3xl m-1 overflow-hidden">
           <div
             className="w-full h-full bg-cover bg-center"
             style={{
@@ -27,13 +27,15 @@ export default function AuthForm(props) {
             }}
           >
             <div className="absolute inset-0 bg-black/40  bg-opacity-30"></div>
-            <div className="absolute bottom-8 left-8 right-8 text-white">
-              <div className=" rounded-lg p-6">
-                <p className="text-white text-center text-sm font-bold uppercase tracking-wide">
+            <div className="absolute bottom-4 left-4 right-4 lg:bottom-8 lg:left-8 lg:right-8 text-white">
+              <div className=" rounded-lg p-4 lg:p-6">
+                <p className="text-white text-center text-xs lg:text-sm font-bold uppercase tracking-wide">
                   WHETHER YOU'RE DREAMING OF SUN-SOAKED BEACHES,
-                  <br />
+                  <br className="hidden lg:block" />
+                  <span className="lg:hidden"> </span>
                   BUSTLING CITYSCAPES, OR SERENE MOUNTAIN
-                  <br />
+                  <br className="hidden lg:block" />
+                  <span className="lg:hidden"> </span>
                   RETREATS, YOUR ADVENTURE STARTS HERE.
                 </p>
               </div>
@@ -42,16 +44,16 @@ export default function AuthForm(props) {
         </div>
 
         {/* Right side - Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white overflow-y-auto">
-          <div className="w-full m-10">
+        <div className="flex-1 lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-white min-h-screen lg:min-h-0">
+          <div className="w-full max-w-md mx-auto">
             {/* Hero text above form */}
-            <div className=" mb-6">
-              <h1 className="text-4xl font-black text-gray-900 mb-4 leading-tight uppercase tracking-wide">
+            <div className="mb-6 text-center lg:text-left">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 mb-4 leading-tight uppercase tracking-wide">
                 YOUR GATEWAY TO
                 <br />
                 UNFORGETTABLE JOURNEYS
               </h1>
-              <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+              <p className="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
                 Ready to embark on your next adventure? {type === 'Log In' ? 'Log in' : 'Register'}{' '}
                 now and let Traveler take you there. Your dream destination is just a click away!
               </p>

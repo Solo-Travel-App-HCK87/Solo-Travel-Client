@@ -99,16 +99,16 @@ export default function PackagePage() {
         }}
       >
         <div className="bg-black/30">
-          <section className="pt-32 pb-23 text-white">
-            <div className="max-w-7xl mx-auto px-6 text-center">
+          <section className="pt-20 sm:pt-24 md:pt-32 pb-16 sm:pb-20 md:pb-23 text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
               <h1
-                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
                 style={{ fontFamily: 'Playfair Display, Georgia, serif', fontWeight: '700' }}
               >
                 Discover Amazing Packages
               </h1>
               <p
-                className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto font-medium opacity-90"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-10 md:mb-12 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto font-medium opacity-90 px-2"
                 style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
               >
                 Choose your destination and find your perfect travel companion
@@ -118,43 +118,44 @@ export default function PackagePage() {
         </div>
       </div>
 
-      <div className="relative z-30 -mt-16" style={{ transform: 'translateY(-20px)' }}>
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="bg-white rounded-2xl p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-4 border-white/20">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 flex-1">
-                <MapPin className="w-5 h-5 mr-3 text-gray-500" />
+      <div className="relative z-30 -mt-8 sm:-mt-12 md:-mt-16" style={{ transform: 'translateY(-20px)' }}>
+        <div className="max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-2 sm:border-4 border-white/20">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex items-center bg-white rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 flex-1 min-w-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-gray-500 flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Search destination"
                   value={searchDestination}
                   onChange={(e) => setSearchDestination(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 outline-none text-gray-700 bg-transparent"
+                  className="flex-1 outline-none text-gray-700 bg-transparent text-sm sm:text-base min-w-0"
                 />
               </div>
-              <div className="flex items-center bg-white rounded-xl px-4 py-3 border border-gray-200 relative flex-1">
-                <span className="text-gray-500 mr-3">💰</span>
-                <select 
-                  value={sortOption} 
+              <div className="flex items-center bg-white rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 relative flex-1 min-w-0">
+                <span className="text-gray-500 mr-2 sm:mr-3 text-sm sm:text-base flex-shrink-0">💰</span>
+                <select
+                  value={sortOption}
                   onChange={handleSortChange}
-                  className="flex-1 outline-none text-gray-700 bg-transparent appearance-none cursor-pointer pr-6"
+                  className="flex-1 outline-none text-gray-700 bg-transparent appearance-none cursor-pointer pr-5 sm:pr-6 text-sm sm:text-base min-w-0"
                 >
                   <option value="">Sort by Price</option>
                   <option value="ASC">Price: Low to High</option>
                   <option value="DESC">Price: High to Low</option>
                 </select>
-                <div className="absolute right-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="absolute right-2 sm:right-3 pointer-events-none">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={handleSearch}
-                className="cursor-pointer bg-gray-800 text-white px-4 py-2 rounded-xl font-medium text-sm hover:bg-gray-900 transition-colors whitespace-nowrap"
+                className="cursor-pointer bg-gray-800 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm hover:bg-gray-900 transition-colors whitespace-nowrap"
               >
-                Search Packages
+                <span className="hidden sm:inline">Search Packages</span>
+                <span className="sm:hidden">Search</span>
               </button>
             </div>
           </div>
@@ -162,16 +163,16 @@ export default function PackagePage() {
       </div>
 
       <section
-        className="relative -mt-18 pt-48 pb-32 z-20 min-h-screen"
+        className="relative -mt-12 sm:-mt-16 md:-mt-18 pt-24 sm:pt-32 md:pt-40 lg:pt-48 pb-16 sm:pb-24 md:pb-32 z-20 min-h-screen"
         style={{
           backgroundColor: '#F8F9FA',
-          borderTopLeftRadius: '32px',
-          borderTopRightRadius: '32px',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
           boxShadow: '0 -10px 30px rgba(0,0,0,0.1), 0 4px 20px rgba(0,0,0,0.05)',
         }}
       >
-        <div className="px-20">
-          <div className="grid md:grid-cols-4 lg:grid-cols-4 gap-5 mb-16">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-12 md:mb-16">
             {packages.map((pkg, index) => (
               <PackageCard key={index} package={pkg} />
             ))}
