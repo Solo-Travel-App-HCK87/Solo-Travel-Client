@@ -1,14 +1,16 @@
 import { Users, User, Package, LogOut, ChevronDown } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../contexts/auth';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const { profile, fetchProfile } = useContext(AuthContext);
   // Close dropdown when clicking outside
   useEffect(() => {
+    fetchProfile();
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileOpen(false);
@@ -20,6 +22,7 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  console.log(profile);
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50 w-full">
@@ -86,14 +89,21 @@ export default function Navbar() {
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
                         <img
-                          src="https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78="
+                          src={
+                            profile?.ImageUrl ||
+                            'https://media.istockphoto.com/id/1341046662/vector/picture-profile-icon-human-or-people-sign-and-symbol-for-template-design.jpg?s=612x612&w=0&k=20&c=A7z3OK0fElK3tFntKObma-3a7PyO8_2xxW0jtmjzT78='
+                          }
                           alt="Profile"
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">John Doe</div>
-                        <div className="text-sm text-gray-500">john.doe@email.com</div>
+                        <div className="font-medium text-gray-900">
+                          {profile.firstName} {profile.lastName}
+                        </div>
+                        <div className="text-sm text-gray-500 truncate max-w-36">
+                          {profile.email}
+                        </div>
                       </div>
                     </div>
                   </div>
