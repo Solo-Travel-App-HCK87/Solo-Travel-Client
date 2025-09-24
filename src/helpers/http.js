@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseUrl = "http://localhost:3000"
+const baseUrl = 'https://solo-travel.harryrismananda.site';
 
-export const http = axios.create ({
-  baseURL: baseUrl
-})
+export const http = axios.create({
+  baseURL: baseUrl,
+});
