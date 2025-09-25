@@ -91,7 +91,7 @@ export default function HomePage() {
               {/* Search Button */}
               <button
                 onClick={handleSearch}
-                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl lg:rounded-full px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 lg:py-4 font-semibold text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 whitespace-nowrap min-w-0 search-button"
+                className="cursor-pointer bg-gray-800  hover:bg-gray-700 active:bg-gray-800 text-white rounded-xl lg:rounded-full px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 lg:py-4 font-semibold text-sm sm:text-base transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 whitespace-nowrap min-w-0 search-button"
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
