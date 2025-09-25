@@ -151,28 +151,10 @@ export default function AuthForm(props) {
                 </div>
               </div>
 
-              {type === 'Log In' && (
-                <div className="flex items-center justify-between text-sm mb-6">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="remember"
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                    <label htmlFor="remember" className="ml-2 text-gray-600">
-                      Remember me
-                    </label>
-                  </div>
-                  <Link to="#" className="text-blue-600 hover:underline">
-                    Forgot your password?
-                  </Link>
-                </div>
-              )}
-
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-green-800 hover:bg-green-900 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full py-3 px-4 cursor-pointer bg-green-800 hover:bg-green-900 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {loading ? (
                   <>
