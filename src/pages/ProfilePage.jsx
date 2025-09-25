@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
 import { AuthContext } from '../contexts/auth';
+import { bgImg } from '../assets';
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
@@ -56,7 +57,7 @@ export default function ProfilePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full"
           style={{
-            backgroundImage: "url('/src/assets/bg.jpg')",
+            backgroundImage: `url(${bgImg})`,
           }}
         >
           <div className="absolute inset-0 bg-black/40"></div>
@@ -82,7 +83,7 @@ export default function ProfilePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat w-full h-full"
           style={{
-            backgroundImage: "url('/src/assets/bg.jpg')",
+            backgroundImage: `url(${bgImg})`,
           }}
         >
           <div className="absolute inset-0 bg-black/40"></div>
