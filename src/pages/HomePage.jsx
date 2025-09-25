@@ -1,6 +1,7 @@
 import { MapPin, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
+import { bgImg } from '../assets';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function HomePage() {
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat w-full h-full"
         style={{
-          backgroundImage: "url('/src/assets/bg.jpg')",
+          backgroundImage: `url(${bgImg})`,
         }}
       >
         <div className="absolute inset-0 bg-black/30"></div>

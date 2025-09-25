@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { fetchPackages } from '../store/packageSlice';
 import { useSearchParams } from 'react-router';
+import { bgImg } from '../assets';
 
 export default function PackagePage() {
   const { packages } = useSelector((state) => state.package);
@@ -17,31 +18,31 @@ export default function PackagePage() {
     const initialSearch = searchParams.get('search');
     const initialSort = searchParams.get('sort');
     const params = {};
-    
+
     if (initialSearch) {
       params.search = initialSearch;
     }
-    
+
     if (initialSort) {
       params.sort = initialSort;
     }
-    
+
     dispatch(fetchPackages(params));
   }, [dispatch, searchParams]);
 
   const handleSearch = () => {
     const params = {};
-    
+
     if (searchDestination.trim()) {
       params.search = searchDestination.trim();
     }
-    
+
     if (sortOption) {
       params.sort = sortOption;
     }
-    
+
     dispatch(fetchPackages(params));
-    
+
     // Update URL params
     const newSearchParams = new URLSearchParams();
     if (searchDestination.trim()) {
@@ -62,21 +63,21 @@ export default function PackagePage() {
   const handleSortChange = (e) => {
     const newSortOption = e.target.value;
     setSortOption(newSortOption);
-    
+
     // Auto search ketika sort berubah
     const params = {};
-    
+
     if (searchDestination.trim()) {
       params.search = searchDestination.trim();
     }
-    
+
     if (newSortOption) {
       params.sort = newSortOption;
     }
-    
+
     console.log('Sort params being sent:', params); // Debug log
     dispatch(fetchPackages(params));
-    
+
     // Update URL params
     const newSearchParams = new URLSearchParams();
     if (searchDestination.trim()) {
@@ -88,14 +89,14 @@ export default function PackagePage() {
     setSearchParams(newSearchParams);
   };
 
-  console.log(packages)
+  console.log(packages);
 
   return (
     <div className="min-h-screen">
       <div
         className="bg-cover bg-center bg-no-repeat relative"
         style={{
-          backgroundImage: "url('/src/assets/bg.jpg')",
+          backgroundImage: `url(${bgImg})`,
         }}
       >
         <div className="bg-black/30">
@@ -118,7 +119,10 @@ export default function PackagePage() {
         </div>
       </div>
 
-      <div className="relative z-30 -mt-8 sm:-mt-12 md:-mt-16" style={{ transform: 'translateY(-20px)' }}>
+      <div
+        className="relative z-30 -mt-8 sm:-mt-12 md:-mt-16"
+        style={{ transform: 'translateY(-20px)' }}
+      >
         <div className="max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6">
           <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.15)] border-2 sm:border-4 border-white/20">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -134,7 +138,9 @@ export default function PackagePage() {
                 />
               </div>
               <div className="flex items-center bg-white rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 relative flex-1 min-w-0">
-                <span className="text-gray-500 mr-2 sm:mr-3 text-sm sm:text-base flex-shrink-0">💰</span>
+                <span className="text-gray-500 mr-2 sm:mr-3 text-sm sm:text-base flex-shrink-0">
+                  💰
+                </span>
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
@@ -145,8 +151,18 @@ export default function PackagePage() {
                   <option value="DESC">Price: High to Low</option>
                 </select>
                 <div className="absolute right-2 sm:right-3 pointer-events-none">
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
               </div>

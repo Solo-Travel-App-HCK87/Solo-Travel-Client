@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
 import { AuthContext } from '../contexts/auth';
+import { myAdventureBg } from '../assets';
 
 export default function MyPackagesPage() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export default function MyPackagesPage() {
               <div className="relative h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
                 {/* Background Image */}
                 <img
-                  src="/src/assets/myadvanture-bg.jpg"
+                  src={myAdventureBg}
                   alt="My Adventure Background"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -110,7 +111,9 @@ export default function MyPackagesPage() {
                     </p>
                     <div className="flex items-center justify-center space-x-1 sm:space-x-2 opacity-90">
                       <MapPin className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
-                      <span className="text-sm sm:text-base md:text-lg font-light tracking-wide">Your Travel Journey</span>
+                      <span className="text-sm sm:text-base md:text-lg font-light tracking-wide">
+                        Your Travel Journey
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -121,7 +124,9 @@ export default function MyPackagesPage() {
             <div className="p-4 sm:p-6 md:p-8 lg:p-12 space-y-8 sm:space-y-12 md:space-y-16 bg-gray-50">
               {/* Bookings List */}
               <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-light text-gray-900 tracking-wide">Your Bookings</h2>
+                <h2 className="text-lg sm:text-xl md:text-2xl font-light text-gray-900 tracking-wide">
+                  Your Bookings
+                </h2>
                 <div className="space-y-4 sm:space-y-5 md:space-y-6">
                   {myPackages.length &&
                     myPackages.map((booking, index) => (
@@ -154,19 +159,25 @@ export default function MyPackagesPage() {
                             {/* Details Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm">
                               <div>
-                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">Duration</div>
+                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">
+                                  Duration
+                                </div>
                                 <div className="text-gray-900">
                                   {booking.TravelPackage.duration_days} Days
                                 </div>
                               </div>
                               <div>
-                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">Departure</div>
+                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">
+                                  Departure
+                                </div>
                                 <div className="text-gray-900">
                                   {booking.TravelPackage.departure_date.split('T')[0]}
                                 </div>
                               </div>
                               <div>
-                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">Price Paid</div>
+                                <div className="text-gray-500 font-medium mb-0.5 sm:mb-1">
+                                  Price Paid
+                                </div>
                                 <div className="text-gray-900 font-semibold">
                                   ${booking.TravelPackage.current_price}
                                 </div>
@@ -226,7 +237,9 @@ export default function MyPackagesPage() {
                   <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     <MapPin className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-400" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-light text-gray-900 mb-1 sm:mb-2">No Travel Packages Yet</h3>
+                  <h3 className="text-lg sm:text-xl font-light text-gray-900 mb-1 sm:mb-2">
+                    No Travel Packages Yet
+                  </h3>
                   <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-5 md:mb-6">
                     Start your adventure by booking your first travel package
                   </p>

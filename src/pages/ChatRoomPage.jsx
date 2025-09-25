@@ -4,8 +4,6 @@ import { useNavigate, useParams } from 'react-router';
 import { format } from 'date-fns';
 import socket from '../libs/socket';
 import { AuthContext } from '../contexts/auth';
-import { showError } from '../helpers/alert';
-import { http } from '../helpers/http';
 
 export default function ChatRoomPage() {
   const navigate = useNavigate();
@@ -16,26 +14,6 @@ export default function ChatRoomPage() {
   const [packageData, setPackageData] = useState({});
 
   const params = useParams();
-  const fetchData = async () => {
-    try {
-      const response = await http({
-        url: `/packages/${params.packageId}`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-      setPackageData(response.data);
-    } catch (error) {
-      console.log(error);
-
-      showError(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   useEffect(() => {
     fetchProfile();
@@ -60,9 +38,13 @@ export default function ChatRoomPage() {
     socket.on(`users_online:${params.packageId}`, (data) => {
       setUsers(data);
     });
+    socket.on(`package:${params.packageId}`, (data) => {
+      setPackageData(data);
+    });
     return () => {
       socket.off(`travel:${params.packageId}`);
       socket.off(`users_online:${params.packageId}`);
+      socket.off(`package:${params.packageId}`);
     };
   }, []);
 
@@ -136,6 +118,9 @@ export default function ChatRoomPage() {
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-900 truncate">
                         {participant.User.firstName}
+                        {participant.User.id === profile.id && (
+                          <span className="text-xs text-blue-400 font-normal ml-1"> ( you ) </span>
+                        )}
                       </div>
                       <div className="text-xs text-green-600">Online</div>
                     </div>
@@ -179,6 +164,9 @@ export default function ChatRoomPage() {
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-900 truncate">
                         {participant.User.firstName}
+                        {participant.User.id === profile.id && (
+                          <span className="text-xs text-blue-600 font-normal ml-1">(you)</span>
+                        )}
                       </div>
                       <div className="text-xs text-gray-500">Offline</div>
                     </div>
@@ -216,9 +204,7 @@ export default function ChatRoomPage() {
                 </div>
               </div>
             </div>
-            {/* <div className="text-sm text-gray-500">
-              Online: {participants.filter((p) => p.isOnline).length}
-            </div> */}
+            <div className="text-sm text-gray-500">Online: {users.length}</div>
           </div>
         </div>
 
