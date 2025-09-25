@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
+import { logoImg } from '../assets';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -14,29 +15,22 @@ export default function Navbar() {
   const [myPackages, setMyPackages] = useState([]);
   // Close dropdown when clicking outside
 
-  
-    const fetchData = async () => {
-  
-      try {
-        
-        const response = await http({
-          url : '/my-packages',
-          method : 'GET',
-          headers : {
-            Authorization : `Bearer ${localStorage.getItem("access_token")}`
-          }
-        })
-  
-        setMyPackages(response.data)
-  
-      } catch (error) {
-        
-        showError(error)
-        console.log(error, '<<< nav')
-  
-      }
-  
+  const fetchData = async () => {
+    try {
+      const response = await http({
+        url: '/my-packages',
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      setMyPackages(response.data);
+    } catch (error) {
+      showError(error);
+      console.log(error, '<<< nav');
     }
+  };
 
   useEffect(() => {
     fetchProfile();
@@ -61,7 +55,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-1 sm:space-x-2">
             <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 flex items-center justify-center flex-shrink-0">
               <img
-                src="/src/assets/logo.png"
+                src={logoImg}
                 alt="DuoJourney Logo"
                 className="max-w-full max-h-full object-contain"
               />
@@ -154,10 +148,12 @@ export default function Navbar() {
 
                   {/* Menu Items */}
                   <div className="py-2">
-                    <button onClick={() => {
-                      navigate('/profile')
-
-                    }} className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors">
+                    <button
+                      onClick={() => {
+                        navigate('/profile');
+                      }}
+                      className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-white/50 transition-colors"
+                    >
                       <User className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">Profile Details</span>
                     </button>
@@ -172,7 +168,11 @@ export default function Navbar() {
                       <Package className="w-4 h-4 text-gray-500" />
                       <div className="flex-1 text-left">
                         <div className="font-medium">My Packages</div>
-                        <div className="text-xs text-gray-500">{myPackages.length ? `${myPackages.length} active bookings` : 'No active bookings'}</div>
+                        <div className="text-xs text-gray-500">
+                          {myPackages.length
+                            ? `${myPackages.length} active bookings`
+                            : 'No active bookings'}
+                        </div>
                       </div>
                     </button>
 
@@ -242,9 +242,7 @@ export default function Navbar() {
                     <div className="font-medium text-gray-900 text-sm sm:text-base">
                       {profile.firstName} {profile.lastName}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-500 truncate">
-                      {profile.email}
-                    </div>
+                    <div className="text-xs sm:text-sm text-gray-500 truncate">{profile.email}</div>
                   </div>
                 </div>
 
@@ -271,7 +269,11 @@ export default function Navbar() {
                     <Package className="w-4 h-4 text-gray-500 flex-shrink-0" />
                     <div className="flex-1 text-left">
                       <div className="font-medium text-sm sm:text-base">My Packages</div>
-                      <div className="text-xs text-gray-500">{myPackages.length ? `${myPackages.length} active bookings` : 'No active bookings'}</div>
+                      <div className="text-xs text-gray-500">
+                        {myPackages.length
+                          ? `${myPackages.length} active bookings`
+                          : 'No active bookings'}
+                      </div>
                     </div>
                   </button>
 
