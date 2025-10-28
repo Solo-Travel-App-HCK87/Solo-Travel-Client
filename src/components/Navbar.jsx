@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-1 sm:space-x-2">
             <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 flex items-center justify-center flex-shrink-0">
               <img
-                src="/src/assets/logo.png"
+                src={logo}
                 alt="DuoJourney Logo"
                 className="max-w-full max-h-full object-contain"
               />

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { fetchPackages } from '../store/packageSlice';
 import { useSearchParams } from 'react-router';
+import bg from '../assets/bg.jpg';
 
 export default function PackagePage() {
   const { packages } = useSelector((state) => state.package);
@@ -95,7 +96,7 @@ export default function PackagePage() {
       <div
         className="bg-cover bg-center bg-no-repeat relative"
         style={{
-          backgroundImage: "url('/src/assets/bg.jpg')",
+          backgroundImage: `url(${bg})`,
         }}
       >
         <div className="bg-black/30">

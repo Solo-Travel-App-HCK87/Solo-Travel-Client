@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { showError } from '../helpers/alert';
 import { http } from '../helpers/http';
 import { AuthContext } from '../contexts/auth';
+import myAdventureBg from '../assets/myadvanture-bg.jpg';
 
 export default function MyPackagesPage() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export default function MyPackagesPage() {
               <div className="relative h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
                 {/* Background Image */}
                 <img
-                  src="/src/assets/myadvanture-bg.jpg"
+                  src={myAdventureBg}
                   alt="My Adventure Background"
                   className="absolute inset-0 w-full h-full object-cover"
                 />

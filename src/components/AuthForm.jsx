@@ -172,7 +172,7 @@ export default function AuthForm(props) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-green-800 hover:bg-green-900 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="cursor-pointer w-full py-3 px-4 bg-green-800 hover:bg-green-900 text-white font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {loading ? (
                   <>
